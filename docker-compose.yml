@@ -1,0 +1,80 @@
+services:
+  nginx:
+    container_name: laksh-nginx-container
+    restart: unless-stopped
+    image: nginx
+    ports:
+      - 80:80
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - internalnet
+    depends_on:
+      - laksh-front
+      - postgres
+      - pgadmin
+
+  laksh-front:
+    restart: always
+    container_name: laksh-front-container
+    build: docker/laksh-front
+    image: laksh-front
+    networks:
+      - internalnet
+
+  postgres:
+    image: postgres:16.1-alpine3.18
+    container_name: laksh-postgres-container
+#    command:
+#      - "postgres"
+#      - "-c"
+#      - "config_file=/etc/postgresql.conf"
+    environment:
+      PGUSER: "postgres"
+      POSTGRES_DB: "habrdb"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    volumes:
+      - ./volumes/laksh-db:/var/lib/postgresql/data
+#      - ./docker/postgres/postgresql.conf:/etc/postgresql.conf:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d habrdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 4G
+    networks:
+      - internalnet
+
+  pgadmin:
+    container_name: laksh-pgadmin-container
+    image: dpage/pgadmin4:8
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "habrpguser@habr.com"
+      PGADMIN_DEFAULT_PASSWORD: "pgadminpwd4habr"
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    volumes:
+      - ./volumes/pgadmin-data:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1G
+    networks:
+      - internalnet
+
+networks:
+  internalnet:
+    driver: bridge
