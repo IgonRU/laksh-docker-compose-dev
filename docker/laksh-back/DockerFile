@@ -1,0 +1,22 @@
+FROM python:3.11.9-bookworm
+
+ENV PYTHONFAULTHANDLER=1 \
+  PYTHONUNBUFFERED=1 \
+  PYTHONHASHSEED=random \
+  PIP_NO_CACHE_DIR=off \
+  PIP_DISABLE_PIP_VERSION_CHECK=on \
+  PIP_DEFAULT_TIMEOUT=100 \
+  POETRY_VERSION=1.8.2
+
+RUN pip3.11 install "poetry==$POETRY_VERSION"
+
+WORKDIR /app
+
+COPY app/poetry.lock app/pyproject.toml /app/
+
+RUN poetry config virtualenvs.create false \
+  && poetry install $(test "$YOUR_ENV" == production && echo "--no-dev") --no-interaction --no-ansi
+
+# COPY ./app /app
+
+# CMD ["tail", "-f", "/dev/null"]

@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "app"
+version = "0.1.0"
+description = ""
+authors = ["ascorblack <a@scorblack.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+django = "^5.0.7"
+gunicorn = "^22.0.0"
+psycopg2-binary = "^2.9.9"
+django-admin-interface = "^0.28.8"
+django-colorfield = "^0.11.0"
+django-phonenumber-field = "^8.0.0"
+phonenumbers = "^8.13.40"
+ujson = "^5.10.0"
+django-unfold = "^0.33.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
