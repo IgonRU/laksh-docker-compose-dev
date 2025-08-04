@@ -27,7 +27,7 @@ services:
     image: laksh-front
     command: /start-front.sh
     volumes:
-      - ./docker/laksh-front/frontend:/app
+      - ./volumes/frontend:/app
       - laksh-front-files:/shared-frontend
     networks:
       internalnet:
