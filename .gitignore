@@ -1,0 +1,8 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Specific __pycache__ directories
+docker/laksh-back/app/src/apps/api/__pycache__/
+docker/laksh-front/frontend/

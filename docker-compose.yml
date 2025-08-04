@@ -26,6 +26,11 @@ services:
     container_name: laksh-front-container
     build: docker/laksh-front
     image: laksh-front
+    command: /start-front.sh
+    ports:
+      - "80:80"
+    volumes:
+      - ./docker/laksh-front/frontend:/app
     networks:
       internalnet:
         ipv4_address: 172.120.1.6

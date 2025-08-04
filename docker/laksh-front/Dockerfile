@@ -4,12 +4,15 @@ RUN apt update; \
     apt install -y git; \
     apt autoremove; \
     apt clean
-RUN git clone https://github.com/IgonRU/laksh-front /app
 RUN npm install -g npm@10.8
-RUN npm install
-RUN npm run build
 
-FROM nginx:stable
+FROM node:20
+RUN apt update; \
+    apt install -y git nginx; \
+    apt autoremove; \
+    apt clean
 COPY default.conf /etc/nginx/conf.d
-COPY --from=build /app/dist/laksh-front/ /usr/share/nginx/html
+COPY start-front.sh /start-front.sh
+RUN chmod +x /start-front.sh
 EXPOSE 80
+CMD ["/start-front.sh"]
