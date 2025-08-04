@@ -8,10 +8,9 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./docker/laksh-back/nginx-back.conf:/etc/nginx/conf.d/nginx-back.conf # Важно положить именно в conf.d
-      - ./docker/laksh-front/default.conf:/etc/nginx/conf.d/nginx-front.conf
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./docker/laksh-back/app/src:/srv/www/backend
-#      - Нужно добавить volume файлов с фронта (как я понял)
+      - /dev/null:/etc/nginx/conf.d/default.conf
     networks:
       internalnet:
         ipv4_address: 172.120.1.2
@@ -27,10 +26,9 @@ services:
     build: docker/laksh-front
     image: laksh-front
     command: /start-front.sh
-    ports:
-      - "80:80"
     volumes:
       - ./docker/laksh-front/frontend:/app
+      - laksh-front-files:/shared-frontend
     networks:
       internalnet:
         ipv4_address: 172.120.1.6
@@ -132,6 +130,7 @@ services:
 volumes:
   habrdb-data:
   pgadmin:
+  laksh-front-files:
 
 networks:
   internalnet:
