@@ -1,0 +1,8 @@
+**/node_modules/
+**/.angular
+**/.vscode
+**/.git
+**/.gitignore
+**/README.md
+**/dist
+

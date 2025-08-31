@@ -1,0 +1,51 @@
+<laksh-page-article 
+  [title]="'О нас'" 
+  [subtitle]="'Создаем природные пространства, в которых комфортно именно Вам'">
+
+
+  <div class="container-desktop">
+    
+    <section class="page-section">
+      <laksh-section-title 
+        [title]="'Принципы'">
+      </laksh-section-title>
+      <div class="section-content">
+        <ul>
+          <li>Мы верим, что нужно наслаждаться жизнью на природе, а не бороться с ней</li>
+          <li>Не бывает мелочей - перфекционизм и педантичность спасет этот мир</li>
+          <li>Окружающее пространство - отражение нашей индивидуальности</li>
+        </ul>
+      </div>
+    </section>
+  
+    <section class="page-section">
+      <laksh-section-title 
+        [title]="'Команда'">
+      </laksh-section-title>
+      <div class="section-content">
+        
+        <laksh-about-person 
+          [portrait]="'/assets/images/about-us/portrait.png'"
+          [name]="'ЕЛЕНА'"
+          [title]="'ЛАНДШАФТНЫЙ АРХИТЕКТОР'"
+          [role]="'Основатель и творческий директор'"
+          [biography]="'Более 5 лет опыта в ландшафтном дизайне - про гармонию, атмосферу и микробики. Разговаривает с растениями. Выпускник школы Сосновки'">
+        </laksh-about-person>
+
+        <laksh-about-person 
+          [portrait]="'/assets/images/about-us/portrait.png'"
+          [name]="'СТАНИСЛАВ'"
+          [title]="'РУКОВОДИТЕЛЬ'"
+          [role]="'Основатель, технический директор'"
+          [biography]="'Более 20 лет опыта в руководстве проектами. Маркетинг, работа с клиентами и подрядчиками, технические вопросы.'"
+          [rtl]="true"
+        >
+        </laksh-about-person>
+
+      </div>
+    </section>
+
+  </div>
+
+</laksh-page-article>
+

@@ -1,0 +1,12 @@
+{% extends "pages/base.html" %}
+
+{% block content %}
+    <div class="home-content">
+        {{ page.body|richtext }}
+        
+        {% if not page.body %}
+        <p>Это главная страница, управляемая через Wagtail CMS.</p>
+        <p>Перейдите в <a href="/admin/">админку Wagtail</a>, чтобы отредактировать содержимое этой страницы.</p>
+        {% endif %}
+    </div>
+{% endblock %}

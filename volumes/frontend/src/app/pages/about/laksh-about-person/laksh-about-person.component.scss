@@ -1,0 +1,125 @@
+@import '../../../../styles/variables.scss';
+
+.about-person {
+  display: flex;
+  gap: 3rem;
+  align-items: flex-start;
+  margin-bottom: 4rem;
+  
+  .portrait-section {
+    flex: 0 0 50%;
+    
+    .portrait {
+      width: 100%;
+      
+      img {
+        width: 100%;
+        height: auto;
+        transition: transform 0.3s ease;
+        
+        &:hover {
+          transform: scale(1.02);
+        }
+      }
+    }
+  }
+  
+  .info-section {
+    flex: 1;
+    
+    .name-title {
+      margin-bottom: 1rem;
+      
+      .name {
+        font-size: 1.5rem;
+        font-weight: 500;
+        margin: 0 0 0.5rem 0;
+        line-height: 1.1;
+      }
+      
+      .title {
+        font-size: 1.1rem;
+        color: $color-text-gray;
+        font-weight: 500;
+        display: block;
+      }
+    }
+    
+    .role {
+      font-size: 1.1rem;
+              color: $color-primary;
+      margin-bottom: 1.5rem;
+      font-weight: 500;
+    }
+    
+    .biography {
+      font-size: 1rem;
+              color: $color-text-dark;
+      line-height: 1.6;
+      text-align: justify;
+    }
+  }
+
+  &.rtl {
+    flex-direction: row-reverse;
+  }
+  
+  @media (max-width: 800px) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2rem;
+    padding: 0;
+
+    .portrait-section {
+        margin-left: -0.5rem;
+        margin-right: -0.5rem;
+    }
+    
+    .info-section {
+      .name-title {
+        .name {
+          font-size: 2rem;
+        }
+        
+        .title {
+          font-size: 1.1rem;
+        }
+      }
+      
+      .role {
+        font-size: 1rem;
+      }
+      
+      .biography {
+        font-size: 0.95rem;
+      }
+    }
+
+    &.rtl {
+        flex-direction: column;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    
+    .info-section {
+      .name-title {
+        .name {
+          font-size: 1.8rem;
+        }
+        
+        .title {
+          font-size: 1rem;
+        }
+      }
+      
+      .role {
+        font-size: 0.95rem;
+      }
+      
+      .biography {
+        font-size: 0.9rem;
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+@import '../../variables.scss';
+
+section.body {
+   
+    section.page-section {
+        display: block;
+        margin-bottom: 3rem;
+    
+        .section-content {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 2rem;
+
+            p {
+            color: $color-text-dark;
+            }
+        }
+    }
+
+}

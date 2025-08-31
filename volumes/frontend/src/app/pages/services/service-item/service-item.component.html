@@ -1,0 +1,27 @@
+<div *ngIf="serviceItem" class="service-item-wrapper">
+    <div class="service-item-title">
+        <h3>{{ serviceItem.title }}</h3>
+    </div>
+    <div class="service-item-description">
+        {{ serviceItem.description }}
+    </div>
+    
+    <div class="service-item-steps">
+        <div 
+            *ngFor="let step of serviceItem.serviceSteps; let i = index" 
+            class="service-step-item"
+            [class.open]="isStepOpen(serviceIndex, i)">
+            
+            <div class="step-header" (click)="toggleStep(serviceIndex, i)">
+                <div class="step-title"><h4>{{ formatStepNumber(i + 1) }}. {{ step.title }}</h4></div>
+                <div class="step-toggle">
+                    <span class="toggle-icon" [class.open]="isStepOpen(serviceIndex, i)">+</span>
+                </div>
+            </div>
+            
+            <div class="step-content">
+                <div class="step-description">{{ step.description }}</div>
+            </div>
+        </div>
+    </div>
+</div>

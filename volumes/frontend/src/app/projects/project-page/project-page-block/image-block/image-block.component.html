@@ -1,0 +1,17 @@
+<div class="container-desktop">
+
+  <section class="page-section">
+    <laksh-section-title 
+      *ngIf="data().title"
+      [title]="data().title" 
+      [subtitle]="data().subtitle">
+    </laksh-section-title>
+    <div class="section-content">
+      <div *ngIf="data().description" class="block-description" [innerHTML]="data().description"></div>
+      <div *ngIf="data().image" class="block-image">
+        <img [src]="data().image" [alt]="data().title || 'Изображение проекта'">
+      </div>
+    </div>
+  </section>
+
+</div>

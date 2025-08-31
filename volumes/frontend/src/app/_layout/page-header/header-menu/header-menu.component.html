@@ -1,0 +1,14 @@
+@if (menu().length) {
+  <div class="menu-columns">
+    <div class="column">
+      @for (item of getLeftColumn(); track item.name) {
+        <a [href]="item.route">{{ item.title }}</a>
+      }
+    </div>
+    <div class="column">
+      @for (item of getRightColumn(); track item.name) {
+        <a [href]="item.route">{{ item.title }}</a>
+      }
+    </div>
+  </div>
+}

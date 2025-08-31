@@ -1,0 +1,68 @@
+body {
+  &.media-handset,
+  &.media-tablet {
+    igon-responsive-layout {
+      padding: 0;
+    }
+
+    .container-desktop {
+      width: auto;
+      align-self: stretch;
+    }
+
+    laksh-page-header {
+      .menu-toggle {
+        @include css3-flex-display();
+        @include css3-justify-content(flex-end);
+        @include css3-align-items(flex-start);
+        padding-top: 1rem;
+
+        mat-icon {
+          font-size: 1.5rem;
+        }
+      }
+    }
+  }
+
+  &.media-tablet {
+    laksh-page-header {
+      .header-row {
+        .contacts {
+          @include css3-flex();
+        }
+      }
+    }
+  }
+
+  &.media-handset {
+
+    laksh-page-header {
+      .header-row {
+        .logo {
+          .icon {
+            width: 5rem;
+          }
+          .title {
+            margin: 0;
+          }
+        }
+        .menu-toggle {
+          @include css3-flex();
+        }
+      }
+    }
+
+
+    // laksh-page-footer {
+    //   .footer-row {
+    //     @include css3-flex-direction(column);
+    //     row-gap: 1rem;
+    //     font-size: 0.8rem;
+
+    //     > * {
+    //       text-align: center;
+    //     }
+    //   }
+    // }
+  }
+}

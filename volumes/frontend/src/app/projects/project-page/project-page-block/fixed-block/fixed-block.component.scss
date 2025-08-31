@@ -1,0 +1,67 @@
+:host {
+  display: block;
+}
+
+:host ::deep .block-content {
+  color: #fff;
+  
+  > * {
+    color: #fff;
+  }
+
+  .section-title {
+    color: #fff !important;
+    
+    .title {
+      color: #fff !important;
+    }
+    
+    .lead {
+      color: #fff !important;
+    }
+  }
+  
+  .block-description {
+    color: #fff;
+    
+    * {
+      color: #fff;
+    }
+  }
+}
+
+:host ::deep .parallax-window {
+  .container-desktop {
+    color: #fff;
+    align-self: center !important;
+    
+    * {
+      color: #fff;
+    }
+  }
+}
+
+// Глобальные стили для fixed-block
+laksh-fixed-block .section-title {
+  color: #fff !important;
+  
+  .title {
+    color: #fff !important;
+  }
+  
+  .lead {
+    color: #fff !important;
+  }
+}
+
+laksh-fixed-block .block-content {
+  color: #fff !important;
+  
+  * {
+    color: #fff !important;
+  }
+}
+
+laksh-fixed-block .container-desktop {
+  align-self: center !important;
+}

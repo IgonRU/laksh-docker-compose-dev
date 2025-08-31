@@ -1,0 +1,35 @@
+<section id="projects" class="fullscreen-slider" aria-label="Наши проекты">
+  <div class="section-header projects-header container-desktop-parent">
+    <div class="container-desktop">
+      <laksh-section-title 
+        [title]="'Портфолио'" 
+        [subtitle]="'Мы работаем над частными садами и общественными пространствами'"
+        [route]="'/projects'">
+      </laksh-section-title>
+    </div>
+  </div>
+  
+  <div class="slider-dots" role="tablist">
+    <button class="dot" *ngFor="let _ of projects; let i = index" (click)="goTo(i)" [class.active]="i === currentIndex" [attr.aria-selected]="i === currentIndex"></button>
+  </div>
+  
+  <div class="slider-container">
+    <div class="slider-track" [style.transform]="'translateX(-' + (currentIndex * 100) + 'vw)'">
+      <div class="slide" *ngFor="let project of projects; let i = index" [class.active]="i === currentIndex">
+        <div class="slide-image" [style.background-image]="'url(' + project.image + ')'"></div>
+        <div class="slide-overlay"></div>
+        <div class="slide-content">
+          <h3 class="slide-title"><a href="{{ project.route }}">{{ project.title }}</a></h3>
+          <p class="slide-description"><a href="{{ project.route }}">{{ project.description }}</a></p>
+        </div>
+      </div>
+    </div>
+    
+    <button class="nav-button prev" (click)="prev()" aria-label="Предыдущий проект">
+      <span>‹</span>
+    </button>
+    <button class="nav-button next" (click)="next()" aria-label="Следующий проект">
+      <span>›</span>
+    </button>
+  </div>
+</section> 

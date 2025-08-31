@@ -1,0 +1,22 @@
+<laksh-page-article 
+  [title]="'Проекты'" 
+  [subtitle]="'Мелочей не существует — именно детали определяют совершенство'">
+
+  <div class="container-desktop">
+    <section class="page-section">
+        <div class="section-content">
+
+            <div class="projects-grid">
+                <app-project-card 
+                *ngFor="let project of projects" 
+                [project]="project">
+                </app-project-card>
+            </div>
+
+        </div>
+    </section>
+  </div>
+
+</laksh-page-article>
+
+

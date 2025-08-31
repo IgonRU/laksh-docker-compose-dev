@@ -1,0 +1,15 @@
+<!-- Обычный логотип на главной странице -->
+<div *ngIf="isHomePage" class="logo lakshmi-pure">
+    <div class="icon"></div>
+    <p class="title">
+        <span>ЛАКШМИ</span><span class="underline">ЛАНДШАФТНАЯ СТУДИЯ</span>
+    </p>
+</div>
+
+<!-- Кликабельный логотип на других страницах -->
+<div *ngIf="!isHomePage" class="logo lakshmi-pure logo-clickable" (click)="navigateToHome()">
+    <div class="icon"></div>
+    <p class="title">
+        <span>ЛАКШМИ</span><span class="underline">ЛАНДШАФТНАЯ СТУДИЯ</span>
+    </p>
+</div>

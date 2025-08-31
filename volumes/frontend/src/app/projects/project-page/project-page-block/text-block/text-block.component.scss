@@ -1,0 +1,38 @@
+@import '../../../../../styles/variables.scss';
+
+:host {
+  display: flex;
+  flex-direction: column;
+}
+
+.text-block {
+  margin-bottom: 4rem;
+
+  .block-title {
+    font-size: 2rem;
+    color: $color-text-dark;
+    margin: 0 0 1rem 0;
+    font-weight: 500;
+  }
+
+  .block-subtitle {
+    font-size: 1.2rem;
+    color: $color-text-gray;
+    margin: 0 0 2rem 0;
+    font-weight: 400;
+  }
+
+  .block-text {
+    font-size: 1rem;
+    color: $color-text-dark;
+    line-height: 1.7;
+    
+    p {
+      margin: 0 0 1.5rem 0;
+      
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}

@@ -1,0 +1,68 @@
+<laksh-fixed-background-block [backgroundImage]="backgroundImage()"></laksh-fixed-background-block>
+
+<div class="container-desktop">
+  <div class="footer-row footer-slogan-row">
+    <div class="logo lakshmi-named">
+      <div class="icon"></div>
+    </div>
+    <div class="footer-slogan">
+      <h1 class="mainpage-title">Пространство процветания</h1>
+      <p class="lead"><i>Синергия природы и архитектуры, подчеркивающая Вашу уникальность.</i></p>
+    </div>
+  </div>
+  <div class="footer-row footer-contacts-row">
+    <div id="contacts" class="footer-contacts">
+      <div class="messengers-socials">
+        <div class="bottom-contact-list messengers">
+          <h3>Звоните</h3>
+          <div class="list">
+            <laksh-phone-number></laksh-phone-number>
+          </div>
+        </div>
+        <div class="bottom-contact-list messengers">
+          <h3>Пишите</h3>
+          <div class="list">
+            <laksh-contact-telegram-elena></laksh-contact-telegram-elena>
+            <laksh-email-address></laksh-email-address>
+            <laksh-contact-whatsapp></laksh-contact-whatsapp>
+          </div>
+        </div>
+        <div class="bottom-contact-list socials">
+          <h3>Заходите</h3>
+          <div class="list">
+            <laksh-contact-telegram></laksh-contact-telegram>
+            <laksh-contact-vk></laksh-contact-vk>
+            <laksh-contact-youtube></laksh-contact-youtube>
+          </div>
+        </div>
+      </div>
+      <div class="contacts-socials">
+        <div class="bottom-contact-list contacts">
+          <h3>Приезжайте</h3>
+
+          <div class="list">
+            <p>Ленинградская область, Кировский район, г. Отрадное, 13-я линия, дом 12</p>
+          </div>
+        </div>
+      </div>
+      <div class="privacy">
+        <p><a href="/privacy-policy">Политика конфиденциальности</a></p>
+        <p><a href="/terms-of-use">Условия использования</a></p>
+        <p><a href="/cookie-policy">Политика использования файлов cookie</a></p>
+      </div>
+    </div>
+    <div class="feedback-form">
+      <h3>Обращайтесь</h3>
+      <laksh-feedback-form></laksh-feedback-form>
+    </div>
+  </div>
+  <div class="footer-row footer-legals-row">
+    <div class="legals">
+      <p>© 2022-{{currentYear}} Ландшафтная студия "ЛАКШМИ".</p>
+    </div>
+    <div class="build-info-container">
+      <laksh-build-info></laksh-build-info>
+    </div>
+  </div>
+</div>
+

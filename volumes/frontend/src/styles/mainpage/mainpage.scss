@@ -1,0 +1,19 @@
+laksh-index {
+  @include css3-flex-display(column);
+  row-gap: 5em;
+
+  > .container-desktop {
+    @include css3-flex-display(column);
+    row-gap: 5em;
+  }
+
+  @import "layout-block";
+  @import "layout-block-item";
+  @import "block-contacts";
+  @import "block-services";
+  @import "block-portfolio";
+  @import "block-about-us";
+}
+
+@import "responsive";
+

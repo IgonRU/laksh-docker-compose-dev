@@ -1,0 +1,20 @@
+laksh-block-about-us {
+  @include css3-flex-display(column);
+
+  .about-us-wrapper {
+    @include css3-flex-display();
+    @include css3-align-items(stretch);
+    column-gap: 3rem;
+
+    .text,
+    .image {
+      @include css3-flex();
+    }
+
+    .image {
+      @include background-image-style();
+      @include css3-aspect-ratio(3, 4);
+      background-image: url("/assets/images/about-us/about-us.jpg");
+    }
+  }
+}

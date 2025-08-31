@@ -1,0 +1,14 @@
+@switch (block().type) {
+  @case ('text') {
+    <laksh-text-block [data]="block().data" />
+  }
+  @case ('image') {
+    <laksh-image-block [data]="block().data" />
+  }
+  @case ('fixed') {
+    <laksh-fixed-block [data]="block().data" />
+  }
+  @case ('gallery') {
+    <laksh-gallery-block [data]="block().data" />
+  }
+}

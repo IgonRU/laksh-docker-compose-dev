@@ -1,0 +1,125 @@
+@import "variables";
+@import "fonts";
+@import "mixins";
+@import "css3-mixins";
+@import "css3-flexbox";
+@import "elements";
+
+* {
+  box-sizing: border-box;
+  touch-action: pan-y;
+}
+
+/* CSS переменная для корректной высоты viewport на мобильных устройствах */
+:root {
+  --vh: 1vh;
+}
+
+// Глобальные стили для мобильного меню
+laksh-mobile-menu {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100vh !important;
+  z-index: 9999 !important;
+  pointer-events: none;
+  
+  .mobile-menu {
+    pointer-events: auto;
+  }
+}
+
+// Глобальные стили для анимации кнопки мобильного меню
+.menu-toggle {
+  position: relative;
+  z-index: 10000 !important; /* Поверх мобильного меню */
+  
+  button {
+    position: relative;
+    z-index: 10000 !important;
+    
+    .menu-icon,
+    .close-icon {
+      position: absolute !important;
+      top: 50% !important;
+      left: 50% !important;
+      transform: translate(-50%, -50%) !important;
+      transition: all 0.3s ease !important;
+    }
+    
+    .close-icon {
+      opacity: 0 !important;
+      transform: translate(-50%, -50%) rotate(90deg) !important;
+      pointer-events: none !important;
+    }
+    
+    &.open {
+      background: rgba(0, 0, 0, 0.1) !important;
+      
+      .menu-icon {
+        opacity: 0 !important;
+        transform: translate(-50%, -50%) rotate(-90deg) !important;
+        pointer-events: none !important;
+      }
+      
+      .close-icon {
+        opacity: 1 !important;
+        transform: translate(-50%, -50%) rotate(0deg) !important;
+        pointer-events: auto !important;
+      }
+    }
+  }
+}
+
+body {
+  overflow-x: hidden;
+}
+
+app-root {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+html {
+  font-size: 18px;
+  font-family: 'Montserrat', Arial, sans-serif;
+  font-style: normal;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  @include css3-text-size-adjust(100%);
+  box-sizing: border-box;
+}
+
+h1, h2, h3, h4 {
+  font-weight: 400;
+  margin-top: 0;
+  color: $green-dark;
+  text-transform: uppercase;
+  line-height: 1;
+  letter-spacing: -0.5px;
+}
+
+h1 {
+  font-size: 2.5rem;
+}
+
+h2 {
+  font-size: 1.9rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+}
+
+a {
+  color: $black;
+  text-decoration: none;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+@import "_layouts/layouts";
+@import "mainpage/mainpage";
+

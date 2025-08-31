@@ -1,0 +1,32 @@
+@mixin background-image-style() {
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+// Миксин для масштабирования блока в диапазоне
+// $minW – минимальная ширина окна
+// $maxW – максимальная ширина окна
+// $minScale – минимальный zoom (например 0.6)
+// $maxScale – максимальный zoom (например 1)
+@mixin zoom-range($minW, $maxW, $minScale: 0.6, $maxScale: 1) {
+  transform-origin: top left;
+
+  @media (max-width: #{$maxW}) and (min-width: #{$minW}) {
+    // clamp нужен, чтобы не выйти за пределы
+    transform: scale(
+      clamp(#{$minScale}, 
+            (100vw - #{$minW}) / (#{$maxW - $minW}) * (#{$maxScale - $minScale}) + #{$minScale}, 
+            #{$maxScale})
+    );
+  }
+
+  @media (max-width: #{$minW}) {
+    transform: scale(#{$minScale});
+  }
+
+  @media (min-width: #{$maxW}) {
+    transform: scale(#{$maxScale});
+  }
+}
+

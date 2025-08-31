@@ -1,0 +1,13 @@
+<div class="lang-switch">
+    @for (language of languages; track language.code; let last = $last) {
+        <a 
+            href="javascript:void(0)" 
+            [class.active]="language.code === getCurrentLanguage()" 
+            (click)="changeLanguage(language.code); $event.preventDefault()">
+            {{ language.title }}
+        </a>
+        @if (!last) {
+            <span class="separator">/</span>
+        }
+    }
+</div>

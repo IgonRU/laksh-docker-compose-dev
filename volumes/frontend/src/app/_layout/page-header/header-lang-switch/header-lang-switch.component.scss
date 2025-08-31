@@ -1,0 +1,45 @@
+@import '../../../../styles/variables.scss';
+
+:host {
+  .lang-switch {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    
+    a {
+              color: $color-text-gray;
+      text-decoration: none;
+      font-family: 'Mulish', Arial, sans-serif;
+      font-size: 18px;
+      transition: color 0.3s ease;
+      font-weight: 100;
+      
+      &:hover {
+        color: $color-text-dark;
+      }
+      
+      &.active {
+        font-weight: 400;
+        color: $color-text-dark;
+      }
+    }
+    
+    .separator {
+      color: $color-text-dark;
+      font-size: 14px;
+      font-weight: 100;
+    }
+
+    @media (max-width: 1499px) and (min-width: 1000px) {
+      a {
+        font-size: 16px;
+      }
+    }
+
+    @media (max-width: 1000px) {
+      a {
+        font-size: 14px;
+      }
+    }
+  }
+}

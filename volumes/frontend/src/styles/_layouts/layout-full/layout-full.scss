@@ -1,0 +1,133 @@
+@import '../../variables.scss';
+
+igon-responsive-layout {
+  $background-color: $color-bg-primary;
+  $desktop-content-max-width: 1400px;
+  overflow-x: hidden;
+  width: 100%;
+  touch-action: pan-y;
+
+  &.layout-full {
+    @include css3-align-items(stretch);
+    background-color: $background-color;
+
+    .container-desktop-parent {
+      @include css3-flex-display(column);
+    }
+
+    .container-desktop {
+      width: 100%;
+      max-width: 1920px;
+      align-self: center;
+      overflow-x: hidden;
+      padding: 0 2rem;
+
+      @media (max-width: 700px) {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+      }
+    }
+
+    .logo {
+      @include css3-flex-display();
+      @include css3-align-items(center);
+      column-gap: 1rem;
+
+      .icon {
+        @include css3-aspect-ratio(1,1);
+        width: 15rem;
+        background-position: left center;
+        background-repeat: no-repeat;
+        background-size: contain;
+        transition: width 0.3s ease;
+      }
+
+      .title {
+        @include css3-flex-display(column);
+        font-family: 'Monly';
+        font-weight: bold;
+        font-size: 3.8rem;
+        line-height: 1.1;
+        transition: font-size 0.3s ease;
+        margin: 0;
+        color: $green-medium;
+        
+        .underline {
+          font-size: 1.5rem;
+          transition: font-size 0.3s ease;
+        }
+      }
+
+      &.lakshmi-pure {
+        .icon {
+          background-image: url("/assets/logo-lakshmi-green-pure.svg");
+        }
+      }
+
+      &.lakshmi-named {
+        .icon {
+          background-image: url("/assets/logo-lakshmi-green-named.svg");
+        }
+      }
+    }
+
+    .contact {
+      background-repeat: no-repeat;
+      background-size: contain;
+      background-position: left center;
+      padding: 1rem 0 1rem 6rem;
+
+      &.type-phone {
+        background-image: url("/assets/images/block-contacts/phone.svg");
+      }
+
+      &.type-email {
+        background-image: url("/assets/images/block-contacts/email.svg");
+      }
+
+      &.type-vk {
+        background-image: url("/assets/logos/logo-vk-contour.svg");
+      }
+
+      &.type-youtube {
+        background-image: url("/assets/logos/logo-youtube-contour.svg");
+      }
+    }
+
+    .section-header {
+      position: relative;
+      padding: 2rem;
+              color: $color-primary;
+      flex-shrink: 0; // Заголовок не сжимается
+      
+      .section-title {
+        font-size: clamp(2rem, 5vw, 4rem);
+        margin: 0 0 0.5rem;
+        font-weight: 500;
+      }
+      
+      .section-sub {
+        font-size: clamp(1rem, 2vw, 1.5rem);
+        opacity: 0.9;
+      }
+
+      @media (max-width: 550px) {
+        .section-title {
+          font-size: clamp(1.5rem, 6vw, 2.5rem);
+        }
+        
+        .projects-sub {
+          font-size: clamp(0.875rem, 3vw, 1.25rem);
+        }
+        padding: 1rem 0.5rem;
+      }
+    }
+
+    @import "header-menu";
+    @import "header";
+    @import "footer";
+    @import "body";
+  }
+}
+
+@import "responsive";
