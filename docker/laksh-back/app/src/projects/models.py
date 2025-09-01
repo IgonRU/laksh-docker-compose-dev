@@ -23,7 +23,7 @@ class Plant(models.Model):
     description = models.TextField(verbose_name="Описание")
 
     panels = [
-        FieldPanel("type"),
+        FieldPanel('name'),
         FieldPanel('image'),
         FieldPanel('description'),
     ]
@@ -65,12 +65,6 @@ class Project(ClusterableModel):
     updated_at = models.DateTimeField(auto_now=True)
 
     panels = [
-        FieldPanel("type"),
-        FieldPanel("title"),
-        FieldPanel("subtitle"),
-        FieldPanel("description"),
-        FieldPanel("image"),
-        FieldPanel("text"),
         MultiFieldPanel([
             FieldPanel('title'),
             FieldPanel('title_lead'),
@@ -110,12 +104,6 @@ class ProjectPlant(Orderable):
     plant = models.ForeignKey(Plant, on_delete=models.CASCADE, verbose_name="Растение")
 
     panels = [
-        FieldPanel("type"),
-        FieldPanel("title"),
-        FieldPanel("subtitle"),
-        FieldPanel("description"),
-        FieldPanel("image"),
-        FieldPanel("text"),
         FieldPanel('plant'),
     ]
 
@@ -131,12 +119,6 @@ class ProjectFeature(Orderable):
     description = models.CharField(max_length=200, verbose_name="Значение")
 
     panels = [
-        FieldPanel("type"),
-        FieldPanel("title"),
-        FieldPanel("subtitle"),
-        FieldPanel("description"),
-        FieldPanel("image"),
-        FieldPanel("text"),
         FieldPanel('name'),
         FieldPanel('description'),
     ]
@@ -157,12 +139,6 @@ class GalleryImage(Orderable):
     caption = models.CharField(max_length=200, blank=True, verbose_name="Подпись")
 
     panels = [
-        FieldPanel("type"),
-        FieldPanel("title"),
-        FieldPanel("subtitle"),
-        FieldPanel("description"),
-        FieldPanel("image"),
-        FieldPanel("text"),
         FieldPanel('image'),
         FieldPanel('caption'),
     ]
@@ -202,18 +178,13 @@ class ProjectBlock(Orderable, ClusterableModel):
     text = models.TextField(blank=True, verbose_name="Текст")
 
     panels = [
-        FieldPanel("type"),
-        FieldPanel("title"),
-        FieldPanel("subtitle"),
-        FieldPanel("description"),
-        FieldPanel("image"),
-        FieldPanel("text"),
         FieldPanel('type'),
         FieldPanel('title'),
         FieldPanel('subtitle'),
         FieldPanel('description'),
         FieldPanel('image'),
         FieldPanel('text'),
+        InlinePanel('gallery_images', label="Изображения галереи"),
     ]
 
     @property
