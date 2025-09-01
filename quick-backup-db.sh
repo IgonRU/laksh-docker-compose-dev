@@ -4,7 +4,7 @@
 
 set -e
 
-BACKUP_DIR="/backup/db-only"
+BACKUP_DIR="$HOME/backup/db-only"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 
 mkdir -p "$BACKUP_DIR"

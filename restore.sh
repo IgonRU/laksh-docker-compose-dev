@@ -11,7 +11,7 @@ if [ -z "$1" ]; then
 fi
 
 BACKUP_DIR="$1"
-PROJECT_DIR="/home/landev/Projects/laksh/laksh-docker-compose-dev"
+PROJECT_DIR="$HOME/Projects/laksh/laksh-docker-compose-dev"
 
 if [ ! -d "$BACKUP_DIR" ]; then
     echo "❌ Директория бекапа не найдена: $BACKUP_DIR"

@@ -5,8 +5,8 @@
 
 set -e
 
-BACKUP_DIR="/backup/laksh-$(date +%Y%m%d_%H%M%S)"
-PROJECT_DIR="/home/landev/Projects/laksh/laksh-docker-compose-dev"
+BACKUP_DIR="$HOME/backup/laksh-$(date +%Y%m%d_%H%M%S)"
+PROJECT_DIR="$HOME/Projects/laksh/laksh-docker-compose-dev"
 
 echo "🚀 Создание полного бекапа проекта Laksh..."
 echo "Директория бекапа: $BACKUP_DIR"

@@ -76,7 +76,7 @@
 ```
 
 ### Хранение бекапов:
-- Локально: `/backup/` 
+- Локально: `~/backup/` 
 - Облако: Google Drive, Yandex.Disk
 - Удаленный сервер: rsync, scp
 - Git LFS для версионирования
@@ -108,5 +108,5 @@ docker system df -v
 du -sh /home/landev/Projects/laksh/laksh-docker-compose-dev
 
 # Размер бекапов
-du -sh /backup/*
+du -sh ~/backup/*
 ```
