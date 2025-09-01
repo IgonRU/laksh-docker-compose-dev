@@ -1,0 +1,22 @@
+# Пример настройки автоматических бекапов для проекта Laksh
+# Добавить в crontab: crontab -e
+
+# Переменные окружения
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+PROJECT_DIR=/home/landev/Projects/laksh/laksh-docker-compose-dev
+
+# Ежедневный бекап базы данных в 2:00 ночи
+0 2 * * * cd $PROJECT_DIR && ./quick-backup-db.sh >> /var/log/laksh-backup.log 2>&1
+
+# Еженедельный полный бекап в воскресенье в 3:00 ночи  
+0 3 * * 0 cd $PROJECT_DIR && ./backup.sh >> /var/log/laksh-backup.log 2>&1
+
+# Ежемесячная очистка старых бекапов (старше 90 дней)
+0 4 1 * * find /backup -name "laksh-*" -type d -mtime +90 -exec rm -rf {} \; >> /var/log/laksh-backup.log 2>&1
+
+# Еженедельная проверка места на диске
+0 5 * * 1 df -h | grep -E '(Filesystem|/backup|/var/lib/docker)' >> /var/log/disk-usage.log
+
+# Ежемесячная очистка Docker (неиспользуемые образы, контейнеры, volumes)
+0 6 1 * * docker system prune -f >> /var/log/docker-cleanup.log 2>&1
