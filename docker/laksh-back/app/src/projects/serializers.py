@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Project, Plant, ProjectPlant, ProjectFeature, ProjectBlock
+from .models import Project, Plant, ProjectPlant, ProjectFeature, ProjectBlock, GalleryImage
 
 
 class PlantSerializer(serializers.ModelSerializer):
@@ -36,6 +36,19 @@ class ProjectFeatureSerializer(serializers.ModelSerializer):
         fields = ['name', 'description']
 
 
+class GalleryImageSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = GalleryImage
+        fields = ['image', 'caption']
+    
+    def get_image(self, obj):
+        if obj.image:
+            return obj.image.file.url
+        return None
+
+
 class ProjectBlockSerializer(serializers.ModelSerializer):
     data = serializers.SerializerMethodField()
     
@@ -57,7 +70,13 @@ class ProjectBlockSerializer(serializers.ModelSerializer):
             data['image'] = obj.image.file.url if obj.image else None
         elif obj.type == 'gallery':
             data['description'] = obj.description
-            data['images'] = obj.images
+            # Используем новые изображения галереи
+            gallery_images = obj.gallery_images.all()
+            if gallery_images.exists():
+                data['images'] = [img.image.file.url for img in gallery_images]
+            else:
+                # Fallback на старые JSON изображения
+                data['images'] = obj.images
             
         return data
 

@@ -24,6 +24,12 @@ class Plant(models.Model):
 
     panels = [
         FieldPanel("type"),
+        FieldPanel("title"),
+        FieldPanel("subtitle"),
+        FieldPanel("description"),
+        FieldPanel("image"),
+        FieldPanel("text"),
+        FieldPanel('name'),
         FieldPanel('image'),
         FieldPanel('description'),
     ]
@@ -214,6 +220,7 @@ class ProjectBlock(Orderable, ClusterableModel):
         FieldPanel('description'),
         FieldPanel('image'),
         FieldPanel('text'),
+        InlinePanel('gallery_images', label="Изображения галереи"),
     ]
 
     @property
