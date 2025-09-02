@@ -2,9 +2,9 @@
 // Не редактируйте его вручную!
 
 export const BUILD_INFO = {
-  "buildTime": "2025-09-01T07:08:52.372Z",
-  "buildDate": "01.09.2025, 07:08:52",
-  "buildTimestamp": 1756710532372,
+  "buildTime": "2025-09-02T14:19:38.004Z",
+  "buildDate": "02.09.2025, 14:19:38",
+  "buildTimestamp": 1756822778004,
   "commitHash": "unknown",
   "branch": "unknown",
   "lastTag": "unknown",
