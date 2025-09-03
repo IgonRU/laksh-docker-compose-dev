@@ -31,6 +31,7 @@ ALLOWED_HOSTS = [
     "web",
     "laksh.local",
     "laksh.ru",
+    "staging.laksh.ru",
 ]
 
 STATIC_URL = 'static/'
@@ -48,6 +49,7 @@ STATICFILES_DIRS = [
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'wagtail.contrib.forms',
     'wagtail.contrib.redirects',
     'wagtail.embeds',
@@ -77,6 +79,7 @@ INSTALLED_APPS = [
 # SILENCED_SYSTEM_CHECKS = ["security.W019"]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -86,6 +89,9 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
 ]
+
+# Do not redirect missing trailing slash to slash
+APPEND_SLASH = False
 
 ROOT_URLCONF = 'config.urls'
 
@@ -184,6 +190,24 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',
     ],
     'DEFAULT_RENDERER_CLASSES': [
-        'rest_framework.renderers.JSONRenderer',
+        'config.renderers.DataWrapperJSONRenderer',
     ],
 }
+
+# CORS
+CORS_ALLOWED_ORIGINS = [
+    "http://laksh.local",
+    "http://laksh.local:5200",
+    "https://staging.laksh.ru",
+    "https://laksh.ru",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://laksh.local",
+    "http://laksh.local:5200",
+    "https://staging.laksh.ru",
+    "https://laksh.ru",
+]
+
+# If frontend uses cookies or credentials
+CORS_ALLOW_CREDENTIALS = True

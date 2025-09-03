@@ -26,6 +26,10 @@ urlpatterns = [
     path('django-admin/', admin.site.urls),
     path('admin/', include(wagtailadmin_urls)),
     path('documents/', include(wagtaildocs_urls)),
+    # API без завершающего слэша
+    path('api', include('apps.api.urls')),
+    path('api/projects', include('projects.urls')),
+    # Дубли с завершающим слэшем
     path('api/', include('apps.api.urls')),
     path('api/projects/', include('projects.urls')),
     path('', include(wagtail_urls)),
