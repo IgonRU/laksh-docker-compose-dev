@@ -15,7 +15,7 @@ services:
     depends_on:
       - laksh-front
       - postgres
-      - web
+      - web 
       - pgadmin
 
   laksh-front:
@@ -26,7 +26,7 @@ services:
     command: /start-front.sh
     volumes:
       - ./volumes/frontend:/app
-      - laksh-front-files:/shared-frontend
+      - ./volumes/shared:/shared-frontend
     networks:
       internalnet:
         ipv4_address: 172.120.1.6
@@ -84,7 +84,7 @@ services:
     env_file:
       - ./docker/postgres/.env
     volumes:
-      - habrdb-data:/var/lib/postgresql/data
+      - ./volumes/database:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     healthcheck:
@@ -112,7 +112,7 @@ services:
       PGADMIN_DEFAULT_USER: "dev"
       PGADMIN_CONFIG_SERVER_MODE: "False"
     volumes:
-      - pgadmin:/var/lib/pgadmin
+      - ./volumes/pgadmin:/var/lib/pgadmin
     ports:
       - "5050:80"
     restart: unless-stopped
