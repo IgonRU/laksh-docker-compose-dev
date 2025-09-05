@@ -6,3 +6,9 @@ __pycache__/
 # Specific __pycache__ directories
 docker/laksh-back/app/src/apps/api/__pycache__/
 
+
+volumes/pgadmin/pgadmin4.db
+
+volumes/frontend/
+
+volumes/laksh-front-files/

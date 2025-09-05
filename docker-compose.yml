@@ -127,8 +127,23 @@ services:
 
 volumes:
   habrdb-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./volumes/postgres
   pgadmin:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./volumes/pgadmin
   laksh-front-files:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./volumes/laksh-front-files
 
 networks:
   internalnet:

@@ -1,85 +1,107 @@
 #!/bin/bash
 
-# Скрипт полного бекапа проекта Laksh
-# Включает: базу данных, код, конфигурации, volumes
-
 set -e
 
-BACKUP_DIR="$HOME/backup/laksh-$(date +%Y%m%d_%H%M%S)"
-PROJECT_DIR="$HOME/Projects/laksh/laksh-docker-compose-dev"
+# Простая утилита бэкапа проекта:
+# - Останавливает контейнеры docker compose
+# - Создаёт в ~/backups/<project>-<timestamp>/ архив проекта, исключая volumes/pgadmin/pgadmin4.db
+# - Кладёт скрипт восстановления рядом с архивом
+# - Запускает контейнеры обратно даже при ошибке (trap)
 
-echo "🚀 Создание полного бекапа проекта Laksh..."
-echo "Директория бекапа: $BACKUP_DIR"
+PROJECT_DIR="$(pwd)"
+if [[ ! -f "$PROJECT_DIR/docker-compose.yml" ]]; then
+  echo "[ERROR] Скрипт нужно запускать из корня проекта (нет docker-compose.yml)" >&2
+  exit 1
+fi
 
-# Создаем директорию для бекапа
-mkdir -p "$BACKUP_DIR"
-cd "$PROJECT_DIR"
+PROJECT_NAME="$(basename "$PROJECT_DIR")"
+DEST_BASE="${BACKUP_DIR:-$HOME/backups}"
+TIMESTAMP="$(date +%Y%m%d_%H%M%S)"
+BACKUP_DIR_PATH="$DEST_BASE/${PROJECT_NAME}-${TIMESTAMP}"
+ARCHIVE_NAME="${PROJECT_NAME}-${TIMESTAMP}.tar.gz"
+RESTORE_SCRIPT_NAME="${PROJECT_NAME}-${TIMESTAMP}-restore.sh"
 
-echo "📦 1. Бекап кода проекта и конфигураций..."
-# Архивируем весь проект (исключаем node_modules и другие ненужные файлы)
-tar -czf "$BACKUP_DIR/project-code.tar.gz" \
-    --exclude='volumes/frontend/node_modules' \
-    --exclude='volumes/frontend/dist' \
-    --exclude='docker/laksh-back/app/src/__pycache__' \
-    --exclude='docker/laksh-back/app/src/*/__pycache__' \
-    --exclude='docker/laksh-back/app/src/*/*/__pycache__' \
-    --exclude='.git' \
-    .
+echo "[$(date +'%Y-%m-%d %H:%M:%S')] Начинаем бэкап проекта"
+echo "Проект: $PROJECT_DIR"
+echo "Назначение: $BACKUP_DIR_PATH"
+echo "Архив: $ARCHIVE_NAME"
 
-echo "🗄️ 2. Бекап базы данных PostgreSQL..."
-# Дамп базы данных
-docker exec laksh-postgres-container pg_dump -U habrpguser -d habrdb -v -f /tmp/database_backup.sql
-docker cp laksh-postgres-container:/tmp/database_backup.sql "$BACKUP_DIR/"
-docker exec laksh-postgres-container rm /tmp/database_backup.sql
+mkdir -p "$BACKUP_DIR_PATH"
 
-echo "💾 3. Бекап Docker volumes..."
-# Бекап volume с данными PostgreSQL
-docker run --rm -v laksh-docker-compose-dev_habrdb-data:/source -v "$BACKUP_DIR":/backup alpine tar -czf /backup/habrdb-data-volume.tar.gz -C /source .
+restore_containers() {
+  echo "[$(date +'%Y-%m-%d %H:%M:%S')] Запускаем контейнеры обратно..."
+  ( cd "$PROJECT_DIR" && docker compose up -d ) || true
+}
+trap restore_containers EXIT
 
-# Бекап volume pgAdmin
-docker run --rm -v laksh-docker-compose-dev_pgadmin:/source -v "$BACKUP_DIR":/backup alpine tar -czf /backup/pgadmin-volume.tar.gz -C /source .
+echo "[$(date +'%Y-%m-%d %H:%M:%S')] Останавливаем контейнеры..."
+( cd "$PROJECT_DIR" && docker compose down )
 
-# Бекап volume фронтенда
-docker run --rm -v laksh-docker-compose-dev_laksh-front-files:/source -v "$BACKUP_DIR":/backup alpine tar -czf /backup/laksh-front-files-volume.tar.gz -C /source .
+echo "[$(date +'%Y-%m-%d %H:%M:%S')] Создаём архив (исключая volumes/pgadmin/pgadmin4.db)..."
+tar --ignore-failed-read -czf "$BACKUP_DIR_PATH/$ARCHIVE_NAME" \
+  --exclude='volumes/pgadmin/pgadmin4.db' \
+  -C "$PROJECT_DIR" .
 
-echo "🖼️ 4. Бекап медиа файлов..."
-# Отдельный архив медиа файлов для удобства
-tar -czf "$BACKUP_DIR/media-files.tar.gz" docker/laksh-back/app/src/media/
+echo "[$(date +'%Y-%m-%d %H:%M:%S')] Создаём скрипт восстановления..."
+cat > "$BACKUP_DIR_PATH/$RESTORE_SCRIPT_NAME" << 'EOS'
+#!/bin/bash
+set -e
 
-echo "📝 5. Создание манифеста бекапа..."
-cat > "$BACKUP_DIR/backup-manifest.txt" << EOF
-Laksh Project Backup Manifest
-============================
-Дата создания: $(date)
-Проект: Laksh Docker Compose Development Environment
+# Скрипт восстановления архива проекта в исходную директорию (по умолчанию)
+# Опция: -d/--destination DIR — восстановить в указанную папку
 
-Содержимое бекапа:
-- project-code.tar.gz: Весь код проекта, конфигурации, Dockerfile'ы
-- database_backup.sql: Дамп базы данных PostgreSQL
-- habrdb-data-volume.tar.gz: Volume с данными PostgreSQL
-- pgadmin-volume.tar.gz: Volume с настройками pgAdmin
-- laksh-front-files-volume.tar.gz: Volume с файлами фронтенда
-- media-files.tar.gz: Медиа файлы и изображения
+BLUE='\033[0;34m'; NC='\033[0m'
+log() { echo -e "${BLUE}[$(date +'%Y-%m-%d %H:%M:%S')]${NC} $1"; }
 
-Версии:
-- PostgreSQL: 16.3-alpine
-- Nginx: 1.27-alpine
-- Python: 3.11.9-bookworm
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+ARCHIVE_FILE="$(basename "$0" | sed 's/-restore\.sh$/.tar.gz/')"
+ARCHIVE_PATH="$SCRIPT_DIR/$ARCHIVE_FILE"
 
-Базы данных:
-- База: habrdb
-- Пользователь: habrpguser
+# Значение по умолчанию — директория, откуда делался бэкап (записана при архивации)
+DEFAULT_RESTORE_DIR="__RESTORE_DEFAULT_DIR__"
+RESTORE_DIR="$DEFAULT_RESTORE_DIR"
 
-Порты:
-- Web: 80
-- PostgreSQL: 5432
-- pgAdmin: 5050
-EOF
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -d|--destination)
+      RESTORE_DIR="$2"; shift 2;;
+    -h|--help)
+      echo "Использование: $0 [-d DIR]"; exit 0;;
+    *) echo "Неизвестная опция: $1"; exit 1;;
+  esac
+done
 
-echo "📊 Размеры файлов бекапа:"
-ls -lh "$BACKUP_DIR"
+if [[ ! -f "$ARCHIVE_PATH" ]]; then
+  echo "[ERROR] Архив не найден: $ARCHIVE_PATH" >&2
+  exit 1
+fi
 
-echo "✅ Бекап завершен успешно!"
-echo "Местоположение: $BACKUP_DIR"
-echo ""
-echo "🔄 Для восстановления используйте: ./restore.sh $BACKUP_DIR"
+log "Восстанавливаем в: $RESTORE_DIR"
+mkdir -p "$RESTORE_DIR"
+tar -xzf "$ARCHIVE_PATH" -C "$RESTORE_DIR"
+
+# Починка прав для pgAdmin, чтобы контейнер стартовал
+if [[ -d "$RESTORE_DIR/volumes/pgadmin" ]]; then
+  log "Чиним права для pgAdmin (создание sessions и выставление владельца 5050:5050)..."
+  docker run --rm \
+    -v "$RESTORE_DIR/volumes/pgadmin":/data \
+    alpine sh -c "mkdir -p /data/sessions /data/storage /data/azurecredentialcache; \
+                  chown -R 5050:5050 /data; \
+                  chmod 700 /data/sessions /data/storage /data/azurecredentialcache; \
+                  [ -f /data/pgadmin4.db ] && chmod 600 /data/pgadmin4.db || true"
+fi
+
+log "Готово. Для запуска: cd $RESTORE_DIR && docker compose up -d"
+EOS
+
+# Подставим исходную директорию в restore-скрипт
+sed -i "s|__RESTORE_DEFAULT_DIR__|$PROJECT_DIR|g" "$BACKUP_DIR_PATH/$RESTORE_SCRIPT_NAME"
+chmod +x "$BACKUP_DIR_PATH/$RESTORE_SCRIPT_NAME"
+
+SIZE_HUMAN=$(du -h "$BACKUP_DIR_PATH/$ARCHIVE_NAME" | cut -f1)
+echo "[$(date +'%Y-%m-%d %H:%M:%S')] Готово"
+echo "Папка бэкапа: $BACKUP_DIR_PATH"
+echo "Архив: $BACKUP_DIR_PATH/$ARCHIVE_NAME ($SIZE_HUMAN)"
+echo "Скрипт восстановления: $BACKUP_DIR_PATH/$RESTORE_SCRIPT_NAME"
+
+
