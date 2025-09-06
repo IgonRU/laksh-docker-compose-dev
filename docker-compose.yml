@@ -5,10 +5,21 @@ services:
     image: nginx:1.27-alpine
     ports:
       - "80:80"
+    environment:
+      ALLOWED_ADMIN_IPS: ${ALLOWED_ADMIN_IPS}
     volumes:
       - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./docker/laksh-back/app/src:/srv/www/backend
       - /dev/null:/etc/nginx/conf.d/default.conf
+    command: >
+      sh -c '
+        mkdir -p /etc/nginx/snippets &&
+        printf "" > /etc/nginx/snippets/allow_admin.conf &&
+        IFS=,; for ip in $$ALLOWED_ADMIN_IPS; do
+          printf "    allow %s;\\n" "$$ip" >> /etc/nginx/snippets/allow_admin.conf;
+        done &&
+        printf "    deny all;\\n" >> /etc/nginx/snippets/allow_admin.conf &&
+        nginx -g "daemon off;"'
     networks:
       internalnet:
         ipv4_address: 172.120.1.2
@@ -24,6 +35,8 @@ services:
     build: docker/laksh-front
     image: laksh-front
     command: /start-front.sh
+    environment:
+      FRONT_ENV: ${FRONT_ENV:-dev}
     volumes:
       - ./volumes/shared:/shared-frontend
     networks:

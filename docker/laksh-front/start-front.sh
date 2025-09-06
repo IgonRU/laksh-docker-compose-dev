@@ -3,6 +3,28 @@
 # Переходим в директорию проекта
 cd /app
 
+echo "Определение окружения сборки..."
+
+# Выбор окружения: dev (по умолчанию), staging, prod
+FRONT_ENV=${FRONT_ENV:-dev}
+echo "Выбрано окружение FRONT_ENV=$FRONT_ENV"
+
+case "$FRONT_ENV" in
+  prod)
+    BUILD_CMD="build:prod"
+    ;;
+  staging)
+    BUILD_CMD="build:staging"
+    ;;
+  dev)
+    BUILD_CMD="build:dev"
+    ;;
+  *)
+    echo "Unknown FRONT_ENV=$FRONT_ENV. Use one of: dev | staging | prod"
+    exit 1
+    ;;
+esac
+
 echo "Сборка проекта..."
 
 # Проверяем, есть ли package.json
@@ -16,8 +38,8 @@ echo "Установка зависимостей..."
 npm install
 
 # Собираем проект
-echo "Сборка проекта..."
-npm run build
+echo "Сборка проекта командой: npm run $BUILD_CMD"
+npm run "$BUILD_CMD"
 
 # Копируем собранные файлы в nginx
 echo "Копирование файлов в nginx..."
