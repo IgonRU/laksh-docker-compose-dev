@@ -9,7 +9,7 @@ services:
     environment:
       ALLOWED_ADMIN_IPS: ${ALLOWED_ADMIN_IPS}
     volumes:
-      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/nginx/nginx-temp.conf:/etc/nginx/nginx.conf
       - ./docker/laksh-back/app/src:/srv/www/backend
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
