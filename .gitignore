@@ -12,3 +12,4 @@ volumes/pgadmin/pgadmin4.db
 volumes/frontend/
 
 volumes/laksh-front-files/
+volumes/shared/

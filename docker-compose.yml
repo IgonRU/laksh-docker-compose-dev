@@ -25,7 +25,6 @@ services:
     image: laksh-front
     command: /start-front.sh
     volumes:
-      - ./volumes/frontend:/app
       - ./volumes/shared:/shared-frontend
     networks:
       internalnet:

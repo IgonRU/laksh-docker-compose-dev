@@ -6,6 +6,10 @@ RUN apt update; \
 RUN npm install -g npm@10.8
 RUN rm -f /etc/nginx/conf.d/default.conf
 RUN rm -f /etc/nginx/sites-enabled/default
+
+# Клонируем репозиторий фронтенда
+RUN git clone https://github.com/IgonRU/laksh-front.git /app
+
 COPY default.conf /etc/nginx/conf.d/
 COPY start-front.sh /start-front.sh
 RUN chmod +x /start-front.sh
