@@ -21,6 +21,7 @@ from wagtail import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
 from django.conf import settings
 from django.conf.urls.static import static
+from projects.views import ProjectDetailAPIView
 
 urlpatterns = [
     path('django-mahant/', admin.site.urls),
@@ -29,6 +30,8 @@ urlpatterns = [
     # API без завершающего слэша
     path('api', include('apps.api.urls')),
     path('api/projects', include('projects.urls')),
+    # Явный маршрут для детальной карточки проекта без необходимости завершающего слэша
+    path('api/projects/<slug:alias>', ProjectDetailAPIView.as_view(), name='project-detail-root'),
     # Дубли с завершающим слэшем
     # path('api/', include('apps.api.urls')),
     # path('api/projects/', include('projects.urls')),

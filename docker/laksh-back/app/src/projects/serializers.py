@@ -88,8 +88,8 @@ class ProjectSerializer(serializers.Serializer):
     titleLead = serializers.SerializerMethodField()
     slogan = serializers.CharField()
     image = serializers.SerializerMethodField()
-    description = serializers.CharField()
-    url = serializers.CharField()
+    description = serializers.CharField(required=False, allow_blank=True)
+    alias = serializers.CharField()
     info = serializers.SerializerMethodField()
     blocks = serializers.SerializerMethodField()
     
@@ -120,9 +120,9 @@ class ProjectSerializer(serializers.Serializer):
             })
         
         return {
-            'type': obj.project_type,
-            'region': obj.region,
-            'style': obj.style,
+            'type': obj.project_type or None,
+            'region': obj.region or None,
+            'style': obj.style or None,
             'area': obj.area,
             'startYear': obj.start_year,
             'endYear': obj.end_year,
@@ -143,7 +143,7 @@ class ProjectListSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Project
-        fields = ['id', 'title', 'titleLead', 'slogan', 'image', 'url']
+        fields = ['id', 'title', 'titleLead', 'slogan', 'image', 'alias']
     
     def get_image(self, obj):
         if obj.image:

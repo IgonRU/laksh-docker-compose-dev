@@ -49,17 +49,17 @@ class Project(ClusterableModel):
         blank=True,
         verbose_name="Главное изображение"
     )
-    description = RichTextField(verbose_name="Описание")
-    url = models.SlugField(max_length=200, unique=True, verbose_name="URL")
+    description = RichTextField(verbose_name="Описание", blank=True)
+    alias = models.SlugField(max_length=200, unique=True, verbose_name="Алиас")
     
     # Info fields
-    project_type = models.CharField(max_length=100, verbose_name="Тип проекта")
-    region = models.CharField(max_length=100, verbose_name="Регион")
-    style = models.CharField(max_length=200, verbose_name="Стиль")
-    area = models.IntegerField(verbose_name="Площадь (м²)")
-    start_year = models.IntegerField(verbose_name="Год начала")
-    end_year = models.IntegerField(verbose_name="Год окончания")
-    plants_total = models.IntegerField(verbose_name="Всего растений")
+    project_type = models.CharField(max_length=100, verbose_name="Тип проекта", blank=True)
+    region = models.CharField(max_length=100, verbose_name="Регион", blank=True)
+    style = models.CharField(max_length=200, verbose_name="Стиль", blank=True)
+    area = models.IntegerField(verbose_name="Площадь (м²)", null=True, blank=True)
+    start_year = models.IntegerField(verbose_name="Год начала", null=True, blank=True)
+    end_year = models.IntegerField(verbose_name="Год окончания", null=True, blank=True)
+    plants_total = models.IntegerField(verbose_name="Всего растений", null=True, blank=True)
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -71,7 +71,7 @@ class Project(ClusterableModel):
             FieldPanel('slogan'),
             FieldPanel('image'),
             FieldPanel('description'),
-            FieldPanel('url'),
+            FieldPanel('alias'),
         ], heading="Основная информация"),
         
         MultiFieldPanel([
@@ -158,10 +158,10 @@ class ProjectBlock(Orderable, ClusterableModel):
     ]
     
     project = ParentalKey(Project, on_delete=models.CASCADE, related_name='blocks')
-    type = models.CharField(max_length=20, choices=BLOCK_TYPES, verbose_name="Тип блока")
+    type = models.CharField(max_length=20, choices=BLOCK_TYPES, verbose_name="Тип блока", blank=True, null=True)
     
     # Поля для всех типов блоков
-    title = models.CharField(max_length=200, verbose_name="Заголовок")
+    title = models.CharField(max_length=200, verbose_name="Заголовок", blank=True)
     subtitle = models.CharField(max_length=300, blank=True, verbose_name="Подзаголовок")
     description = models.TextField(blank=True, verbose_name="Описание")
     

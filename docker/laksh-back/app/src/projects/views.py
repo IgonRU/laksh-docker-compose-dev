@@ -15,5 +15,5 @@ class ProjectDetailAPIView(generics.RetrieveAPIView):
     """API для получения детальной информации о проекте"""
     queryset = Project.objects.prefetch_related('plants__plant', 'features', 'blocks')
     serializer_class = ProjectSerializer
-    lookup_field = 'url'
-    lookup_url_kwarg = 'project_url'
+    lookup_field = 'alias'
+    lookup_url_kwarg = 'alias'
