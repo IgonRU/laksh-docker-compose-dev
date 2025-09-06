@@ -110,6 +110,11 @@ services:
       PGADMIN_DEFAULT_PASSWORD: "pgdev752113"
       PGADMIN_DEFAULT_USER: "dev"
       PGADMIN_CONFIG_SERVER_MODE: "False"
+    command: >
+      sh -c "mkdir -p /var/lib/pgadmin/sessions && 
+             chown -R 5050:5050 /var/lib/pgadmin/sessions && 
+             chmod -R 755 /var/lib/pgadmin/sessions && 
+             /entrypoint.sh"
     volumes:
       - ./volumes/pgadmin:/var/lib/pgadmin
     ports:
