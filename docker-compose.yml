@@ -42,8 +42,7 @@ services:
     volumes:
       - ./docker/laksh-back/app:/app
     env_file:
-      - ./docker/laksh-back/app/.env
-      - ./docker/postgres/.env
+      - .env
 
   postgres:
     image: postgres:16.3-alpine
@@ -78,16 +77,15 @@ services:
       - "-c"
       - "pg_stat_statements.track=all"
     container_name: laksh-postgres-container
-    environment:
-      PGDATA: "/var/lib/postgresql/data/pgdata"
     env_file:
-      - ./docker/postgres/.env
+      - .env
     volumes:
       - ./volumes/database:/var/lib/postgresql/data
+      - ./docker/postgres/initdb:/docker-entrypoint-initdb.d:ro
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U habrpguser -d habrdb"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -105,11 +103,8 @@ services:
   pgadmin:
     container_name: laksh-pgadmin-container
     image: dpage/pgadmin4:8
-    environment:
-      PGADMIN_DEFAULT_EMAIL: "habrpguser@habr.com"
-      PGADMIN_DEFAULT_PASSWORD: "pgdev752113"
-      PGADMIN_DEFAULT_USER: "dev"
-      PGADMIN_CONFIG_SERVER_MODE: "False"
+    env_file:
+      - .env
     command: >
       sh -c "mkdir -p /var/lib/pgadmin/sessions && 
              chown -R 5050:5050 /var/lib/pgadmin/sessions && 

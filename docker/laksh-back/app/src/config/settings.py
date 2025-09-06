@@ -21,18 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-3s9$cw#y$9ipss$47*)$yoibim57(kr6av7$!mo^3h+k4k4kw2'
+SECRET_KEY = environ.get('DJANGO_SECRET_KEY', 'django-insecure-3s9$cw#y$9ipss$47*)$yoibim57(kr6av7$!mo^3h+k4k4kw2')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = environ.get('DJANGO_DEBUG', 'False').lower() in ('1', 'true', 'yes')
 
-ALLOWED_HOSTS = [
-    "0.0.0.0",
-    "web",
-    "laksh.local",
-    "laksh.ru",
-    "staging.laksh.ru",
-]
+ALLOWED_HOSTS = [h.strip() for h in environ.get('DJANGO_ALLOWED_HOSTS', '0.0.0.0,web,laksh.local,laksh.ru,staging.laksh.ru').split(',') if h.strip()]
 
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
