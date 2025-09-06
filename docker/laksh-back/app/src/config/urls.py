@@ -23,15 +23,15 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('django-admin/', admin.site.urls),
-    path('admin/', include(wagtailadmin_urls)),
+    path('django-mahant/', admin.site.urls),
+    path('mahant/', include(wagtailadmin_urls)),
     path('documents/', include(wagtaildocs_urls)),
     # API без завершающего слэша
     path('api', include('apps.api.urls')),
     path('api/projects', include('projects.urls')),
     # Дубли с завершающим слэшем
-    path('api/', include('apps.api.urls')),
-    path('api/projects/', include('projects.urls')),
+    # path('api/', include('apps.api.urls')),
+    # path('api/projects/', include('projects.urls')),
     path('', include(wagtail_urls)),
 ]
 
