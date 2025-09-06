@@ -8,18 +8,18 @@ set -e
 # - Кладёт скрипт восстановления рядом с архивом
 # - Запускает контейнеры обратно даже при ошибке (trap)
 
-PROJECT_DIR="$(pwd)"
+PROJECT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 if [[ ! -f "$PROJECT_DIR/docker-compose.yml" ]]; then
   echo "[ERROR] Скрипт нужно запускать из корня проекта (нет docker-compose.yml)" >&2
   exit 1
 fi
 
 PROJECT_NAME="$(basename "$PROJECT_DIR")"
-DEST_BASE="${BACKUP_DIR:-$HOME/backups}"
+DEST_BASE="${BACKUP_DIR:-$HOME/backups/laksh}"
 TIMESTAMP="$(date +%Y%m%d_%H%M%S)"
 BACKUP_DIR_PATH="$DEST_BASE/${PROJECT_NAME}-${TIMESTAMP}"
 ARCHIVE_NAME="${PROJECT_NAME}-${TIMESTAMP}.tar.gz"
-RESTORE_SCRIPT_NAME="${PROJECT_NAME}-${TIMESTAMP}-restore.sh"
+RESTORE_SCRIPT_NAME="restore.sh"
 
 echo "[$(date +'%Y-%m-%d %H:%M:%S')] Начинаем бэкап проекта"
 echo "Проект: $PROJECT_DIR"
