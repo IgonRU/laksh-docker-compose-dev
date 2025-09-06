@@ -4,7 +4,7 @@ set -e
 
 # Простая утилита бэкапа проекта:
 # - Останавливает контейнеры docker compose
-# - Создаёт в ~/backups/<project>-<timestamp>/ архив проекта, исключая volumes/pgadmin/pgadmin4.db
+# - Создаёт в ~/backups/<project>-<timestamp>/ архив проекта
 # - Кладёт скрипт восстановления рядом с архивом
 # - Запускает контейнеры обратно даже при ошибке (trap)
 
@@ -37,7 +37,7 @@ trap restore_containers EXIT
 echo "[$(date +'%Y-%m-%d %H:%M:%S')] Останавливаем контейнеры..."
 ( cd "$PROJECT_DIR" && docker compose down )
 
-echo "[$(date +'%Y-%m-%d %H:%M:%S')] Создаём архив (исключая volumes/pgadmin/pgadmin4.db)..."
+echo "[$(date +'%Y-%m-%d %H:%M:%S')] Создаём архив..."
 tar --ignore-failed-read -czf "$BACKUP_DIR_PATH/$ARCHIVE_NAME" \
   --exclude='volumes/pgadmin/pgadmin4.db' \
   -C "$PROJECT_DIR" .
@@ -54,7 +54,7 @@ BLUE='\033[0;34m'; NC='\033[0m'
 log() { echo -e "${BLUE}[$(date +'%Y-%m-%d %H:%M:%S')]${NC} $1"; }
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-ARCHIVE_FILE="$(basename "$0" | sed 's/-restore\.sh$/.tar.gz/')"
+ARCHIVE_FILE="$(ls "$SCRIPT_DIR"/*.tar.gz 2>/dev/null | head -1 | xargs basename)"
 ARCHIVE_PATH="$SCRIPT_DIR/$ARCHIVE_FILE"
 
 # Значение по умолчанию — директория, откуда делался бэкап (записана при архивации)
@@ -79,17 +79,6 @@ fi
 log "Восстанавливаем в: $RESTORE_DIR"
 mkdir -p "$RESTORE_DIR"
 tar -xzf "$ARCHIVE_PATH" -C "$RESTORE_DIR"
-
-# Починка прав для pgAdmin, чтобы контейнер стартовал
-if [[ -d "$RESTORE_DIR/volumes/pgadmin" ]]; then
-  log "Чиним права для pgAdmin (создание sessions и выставление владельца 5050:5050)..."
-  docker run --rm \
-    -v "$RESTORE_DIR/volumes/pgadmin":/data \
-    alpine sh -c "mkdir -p /data/sessions /data/storage /data/azurecredentialcache; \
-                  chown -R 5050:5050 /data; \
-                  chmod 700 /data/sessions /data/storage /data/azurecredentialcache; \
-                  [ -f /data/pgadmin4.db ] && chmod 600 /data/pgadmin4.db || true"
-fi
 
 log "Готово. Для запуска: cd $RESTORE_DIR && docker compose up -d"
 EOS
