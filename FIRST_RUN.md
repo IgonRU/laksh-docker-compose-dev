@@ -37,6 +37,7 @@ docker compose ps
 - **Email**: habrpguser@habr.com
 - **Пароль**: pgdev752113
 - **Пользователь**: dev
+- **Примечание**: Данные pgAdmin хранятся только внутри контейнера и сбрасываются при пересоздании
 
 ### PostgreSQL
 - **База данных**: habrdb
@@ -51,10 +52,18 @@ docker compose ps
 # Остановить контейнер
 docker compose stop pgadmin
 
-# Исправить права (если нужно)
-sudo chown -R 5050:5050 volumes/pgadmin/sessions
+# Перезапустить (права создаются автоматически)
+docker compose up -d pgadmin
+```
 
-# Перезапустить
+### Сброс настроек pgAdmin
+Если нужно сбросить настройки pgAdmin:
+```bash
+# Остановить и удалить контейнер
+docker compose stop pgadmin
+docker compose rm pgadmin
+
+# Запустить заново (создастся с чистыми настройками)
 docker compose up -d pgadmin
 ```
 

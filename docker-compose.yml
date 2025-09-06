@@ -115,8 +115,6 @@ services:
              chown -R 5050:5050 /var/lib/pgadmin/sessions && 
              chmod -R 755 /var/lib/pgadmin/sessions && 
              /entrypoint.sh"
-    volumes:
-      - ./volumes/pgadmin:/var/lib/pgadmin
     ports:
       - "5050:80"
     restart: unless-stopped
