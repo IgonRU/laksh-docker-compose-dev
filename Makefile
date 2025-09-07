@@ -21,6 +21,12 @@ logs:
 ps:
 	docker compose ps
 
-rebuild:
-	docker compose build --no-cache laksh-front
+rebuild-prod:
+	FRONT_ENV=prod docker compose up -d --no-deps --build --force-recreate laksh-front
+
+rebuild-staging:
+	FRONT_ENV=staging docker compose up -d --no-deps --build --force-recreate laksh-front
+
+rebuild-dev:
+	FRONT_ENV=dev docker compose up -d --no-deps --build --force-recreate laksh-front
 
