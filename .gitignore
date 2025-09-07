@@ -14,3 +14,7 @@ volumes/frontend/
 
 volumes/laksh-front-files/
 volumes/shared/
+
+# Certbot
+certbot/conf/
+certbot/www/

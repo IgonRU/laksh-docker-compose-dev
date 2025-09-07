@@ -9,7 +9,7 @@ services:
     environment:
       ALLOWED_ADMIN_IPS: ${ALLOWED_ADMIN_IPS}
     volumes:
-      - ./docker/nginx/nginx-temp.conf:/etc/nginx/nginx.conf
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./docker/laksh-back/app/src:/srv/www/backend
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
@@ -143,8 +143,8 @@ services:
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
     command: sh -c "certbot renew --webroot -w /var/www/certbot --deploy-hook 'docker exec laksh-nginx-container nginx -s reload'"
-    depends_on:
-      - nginx
+#    depends_on:
+#      - nginx
 
 volumes:
   habrdb-data:
