@@ -3,6 +3,7 @@
 # Переходим в директорию проекта
 cd /app
 
+echo "=== Запуск SSR сервера ==="
 echo "Определение окружения сборки..."
 
 # Выбор окружения: dev (по умолчанию), staging, prod
@@ -25,8 +26,7 @@ case "$FRONT_ENV" in
     ;;
 esac
 
-echo "Сборка проекта..."
-
+echo "=== Установка зависимостей ==="
 # Проверяем, есть ли package.json
 if [ ! -f "package.json" ]; then
     echo "Ошибка: package.json не найден. Проверьте, что код примонтирован в /app"
@@ -34,29 +34,24 @@ if [ ! -f "package.json" ]; then
 fi
 
 # Устанавливаем зависимости
-echo "Установка зависимостей..."
 npm install
 
-# Собираем проект
-echo "Сборка проекта командой: npm run $BUILD_CMD"
+echo "=== Сборка SSR проекта ==="
+echo "Выполняем команду: npm run $BUILD_CMD"
 npm run "$BUILD_CMD"
 
-# Копируем собранные файлы в nginx
-echo "Копирование файлов в nginx..."
-rm -rf /usr/share/nginx/html/browser
-mkdir -p /usr/share/nginx/html/browser
-cp -r /app/dist/laksh-front/browser/* /usr/share/nginx/html/browser/
+# Проверяем, что SSR сервер собрался
+if [ ! -f "dist/laksh-front/server/server.mjs" ]; then
+    echo "Ошибка: SSR сервер не собрался. Файл server.mjs не найден."
+    exit 1
+fi
 
-# Копируем файлы в общий volume для кеширования
-echo "Копирование файлов в общий volume..."
-cp -r /app/dist/laksh-front/browser/* /shared-frontend/
+echo "=== SSR сервер собран успешно ==="
+echo "Файлы в dist/laksh-front/:"
+ls -la dist/laksh-front/
 
-# Запускаем nginx
-echo "Запуск nginx..."
-nginx -g "daemon off;" &
-echo "Nginx запущен в фоновом режиме"
+echo "Файлы в dist/laksh-front/server/:"
+ls -la dist/laksh-front/server/
 
-# Ждем бесконечно
-while true; do
-  sleep 1
-done 
+echo "=== Запуск SSR сервера на порту 4000 ==="
+node dist/laksh-front/server/server.mjs

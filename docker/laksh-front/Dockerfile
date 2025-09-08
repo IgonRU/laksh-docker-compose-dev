@@ -1,17 +1,26 @@
 FROM node:20
-RUN apt update; \
-    apt install -y git nginx; \
-    apt autoremove; \
+
+# Устанавливаем git для клонирования репозитория
+RUN apt update && \
+    apt install -y git && \
+    apt autoremove && \
     apt clean
+
+# Обновляем npm
 RUN npm install -g npm@10.8
-RUN rm -f /etc/nginx/conf.d/default.conf
-RUN rm -f /etc/nginx/sites-enabled/default
 
 # Клонируем репозиторий фронтенда
 RUN git clone https://github.com/IgonRU/laksh-front.git /app
 
-COPY default.conf /etc/nginx/conf.d/
-COPY start-front.sh /start-front.sh
-RUN chmod +x /start-front.sh
-EXPOSE 80
-CMD ["/start-front.sh"]
+# Устанавливаем рабочую директорию
+WORKDIR /app
+
+# Копируем скрипт запуска SSR
+COPY start-front-ssr.sh /start-front-ssr.sh
+RUN chmod +x /start-front-ssr.sh
+
+# Открываем порт 4000 для SSR сервера
+EXPOSE 4000
+
+# Запускаем SSR сервер
+CMD ["/start-front-ssr.sh"]

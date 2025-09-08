@@ -8,8 +8,10 @@ services:
       - "443:443"
     environment:
       ALLOWED_ADMIN_IPS: ${ALLOWED_ADMIN_IPS}
+      FRONT_ENV: ${FRONT_ENV:-dev}
     volumes:
-      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/nginx/nginx-dev.conf:/etc/nginx/nginx-dev.conf
+      - ./docker/nginx/nginx-prod.conf:/etc/nginx/nginx-prod.conf
       - ./docker/laksh-back/app/src:/srv/www/backend
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
@@ -22,6 +24,11 @@ services:
           printf "    allow %s;\\n" "$$ip" >> /etc/nginx/snippets/allow_admin.conf;
         done &&
         printf "    deny all;\\n" >> /etc/nginx/snippets/allow_admin.conf &&
+        if [ "$$FRONT_ENV" = "dev" ]; then
+          cp /etc/nginx/nginx-dev.conf /etc/nginx/nginx.conf;
+        else
+          cp /etc/nginx/nginx-prod.conf /etc/nginx/nginx.conf;
+        fi &&
         nginx -g "daemon off;"'
     networks:
       internalnet:
@@ -37,7 +44,7 @@ services:
     container_name: laksh-front-container
     build: docker/laksh-front
     image: laksh-front
-    command: /start-front.sh
+    command: /start-front-ssr.sh
     environment:
       FRONT_ENV: ${FRONT_ENV:-dev}
     volumes:
