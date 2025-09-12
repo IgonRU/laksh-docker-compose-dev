@@ -27,9 +27,9 @@ urlpatterns = [
     path('django-mahant/', admin.site.urls),
     path('mahant/', include(wagtailadmin_urls)),
     path('documents/', include(wagtaildocs_urls)),
-    # API без завершающего слэша
-    path('api', include('apps.api.urls')),
-    path('api/projects', include('projects.urls')),
+    # API корень с завершающим слэшем для корректных путей вида /api/... 
+    path('api/', include('apps.api.urls')),
+    path('api/projects/', include('projects.urls')),
     # Явный маршрут для детальной карточки проекта без необходимости завершающего слэша
     path('api/projects/<slug:alias>', ProjectDetailAPIView.as_view(), name='project-detail-root'),
     # Дубли с завершающим слэшем
