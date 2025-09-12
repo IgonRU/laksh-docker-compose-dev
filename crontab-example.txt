@@ -4,7 +4,7 @@
 # Переменные окружения
 SHELL=/bin/bash
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-PROJECT_DIR=/home/landev/Projects/laksh/laksh-docker-compose-dev
+PROJECT_DIR=/home/landev/Projects/laksh/laksh-dc
 
 # Ежедневный бекап базы данных в 2:00 ночи
 0 2 * * * cd $PROJECT_DIR && ./quick-backup-db.sh >> /var/log/laksh-backup.log 2>&1

@@ -39,7 +39,7 @@
 ## Автоматизация (cron)
 ```bash
 # Еженедельный бэкап в воскресенье в 03:00
-0 3 * * 0 /home/landev/Projects/laksh/laksh-docker-compose-prod/backup.sh >> /var/log/laksh-backup.log 2>&1
+0 3 * * 0 /home/landev/Projects/laksh/laksh-dc/backup.sh >> /var/log/laksh-backup.log 2>&1
 ```
 
 ## Советы

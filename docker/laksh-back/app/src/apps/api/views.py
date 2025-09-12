@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.sessions.models import Session
 from django.views.decorators.csrf import csrf_exempt
 from .utils import decode_request_body
-from .models import Ticket
+from .models import Ticket, FeedbackMessage
 from ujson import JSONDecodeError
 from rest_framework.response import Response
 from rest_framework import status
@@ -32,3 +32,40 @@ def add_ticket(request: HttpRequest):
     ticket = Ticket(name=name, email=email, phone=phone)
     ticket.save()
     return Response({"ticket_id": ticket.ticket_id, "message": "Ticket added successfully"}, status=status.HTTP_201_CREATED)
+
+
+@csrf_exempt
+@api_view(["POST"]) 
+@permission_classes([AllowAny])
+@authentication_classes([])
+def submit_feedback(request: HttpRequest):
+    try:
+        body = decode_request_body(request.body.decode("utf-8"))
+    except JSONDecodeError:
+        return Response({"ok": False, "message": "Invalid request body"}, status=status.HTTP_400_BAD_REQUEST)
+
+    name = (body.get('name') or '').strip()
+    request_text = (body.get('request') or '').strip()
+    phone = (body.get('phone') or '').strip()
+    source_page = (body.get('source_page') or '').strip()
+
+    if not name or not request_text:
+        return Response({"ok": False, "message": "Missing required fields", "errors": {
+            "name": ["Обязательное поле"] if not name else [],
+            "request": ["Обязательное поле"] if not request_text else []
+        }}, status=status.HTTP_400_BAD_REQUEST)
+
+    ip = request.META.get('REMOTE_ADDR')
+    ua = request.META.get('HTTP_USER_AGENT', '')[:512]
+
+    feedback = FeedbackMessage(
+        name=name,
+        phone=phone or None,
+        request=request_text,
+        source_page=source_page or None,
+        user_agent=ua,
+        ip_address=ip,
+    )
+    feedback.save()
+
+    return Response({"ok": True, "message": "Спасибо! Мы свяжемся с вами."}, status=status.HTTP_201_CREATED)

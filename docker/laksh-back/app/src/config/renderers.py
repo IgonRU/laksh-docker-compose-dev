@@ -9,9 +9,14 @@ class DataWrapperJSONRenderer(JSONRenderer):
     def render(self, data: Any, accepted_media_type=None, renderer_context=None) -> bytes:
         response = renderer_context.get('response') if renderer_context else None
 
-        # Оставляем формат ошибок DRF без обертки
-        if response is not None and response.exception:
-            return super().render(data, accepted_media_type, renderer_context)
+        # Ошибки: всегда заворачиваем в { data, error, status }
+        if response is not None and (getattr(response, 'exception', False) or getattr(response, 'status_code', 200) >= 400):
+            wrapped_error = {
+                'data': data,
+                'error': True,
+                'status': getattr(response, 'status_code', None),
+            }
+            return super().render(wrapped_error, accepted_media_type, renderer_context)
 
         # Пагинация DRF
         if isinstance(data, dict) and {'results', 'count'}.issubset(data.keys()):
