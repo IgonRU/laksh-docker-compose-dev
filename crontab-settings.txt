@@ -1,1 +1,1 @@
-30 3 * * * /home/igon/www/laksh.ru/laksh-docker-compose/renew-cert.sh >> /home/igon/www/laksh.ru/laksh-docker-compose/certbot-renew.log 2>&1[K
+30 3 * * * $(cd "$(dirname "$0")" && pwd)/renew-cert.sh >> $(cd "$(dirname "$0")" && pwd)/certbot-renew.log 2>&1[K

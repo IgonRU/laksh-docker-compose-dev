@@ -5,7 +5,7 @@
 ### 1. Клонирование проекта
 ```bash
 git clone https://github.com/IgonRU/laksh-docker-compose-dev.git
-cd laksh-docker-compose-dev
+cd laksh-dc
 ```
 
 ### 2. Настройка переменных окружения

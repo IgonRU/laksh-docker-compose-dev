@@ -1,6 +1,9 @@
 #!/bin/bash
 
-cd /home/igon/www/laksh.ru/laksh-docker-compose-dev || exit 1
+# Динамическое определение пути к проекту
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+cd "$PROJECT_DIR" || exit 1
 
 docker compose run --rm certbot renew --webroot -w /var/www/certbot
 
