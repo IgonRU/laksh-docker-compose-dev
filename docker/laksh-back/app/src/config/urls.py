@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
@@ -27,8 +27,8 @@ urlpatterns = [
     path('django-mahant/', admin.site.urls),
     path('mahant/', include(wagtailadmin_urls)),
     path('documents/', include(wagtaildocs_urls)),
-    # API корень: только без завершающего слэша
-    path('api', include('apps.api.urls')),
+    # API корень: подключаем поддерево /api/... (без требуемого завершающего слэша у конечных URL)
+    re_path(r'^api/', include('apps.api.urls')),
     # Проекты: только без завершающего слэша
     path('api/projects', include('projects.urls')),
     # Явный маршрут для детальной карточки проекта без необходимости завершающего слэша
