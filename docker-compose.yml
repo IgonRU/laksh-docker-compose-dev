@@ -64,6 +64,7 @@ services:
         ipv4_address: 172.120.1.3
     volumes:
       - ./docker/laksh-back/app:/app
+      - ./docker/laksh-back:/laksh-back
     env_file:
       - .env
 

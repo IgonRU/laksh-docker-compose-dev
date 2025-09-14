@@ -25,6 +25,8 @@ SECRET_KEY = environ.get('DJANGO_SECRET_KEY', 'django-insecure-3s9$cw#y$9ipss$47
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = environ.get('DJANGO_DEBUG', 'False').lower() in ('1', 'true', 'yes')
+DJANGO_ENV = environ.get('DJANGO_ENV', 'dev').lower()
+IS_PROD = DJANGO_ENV == 'prod'
 
 ALLOWED_HOSTS = [h.strip() for h in environ.get('DJANGO_ALLOWED_HOSTS', '0.0.0.0,web,laksh.local,laksh.ru,staging.laksh.ru').split(',') if h.strip()]
 
@@ -206,12 +208,14 @@ CSRF_TRUSTED_ORIGINS = [
 # If frontend uses cookies or credentials
 CORS_ALLOW_CREDENTIALS = True
 
-# Email (SMTP / console backend)
-# По умолчанию в dev используем консольный backend, а в prod читаем SMTP из переменных окружения
-EMAIL_BACKEND = environ.get(
-    'EMAIL_BACKEND',
-    'django.core.mail.backends.console.EmailBackend' if DEBUG else 'django.core.mail.backends.smtp.EmailBackend'
-)
+# Email
+# Во всех режимах, кроме prod, сохраняем письма в файл (config.backends.file_email.FileEmailBackend)
+if DJANGO_ENV == 'prod':
+    EMAIL_BACKEND = environ.get('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
+else:
+    # В non-prod всегда пишем письма в файл, переменная окружения EMAIL_BACKEND игнорируется
+    EMAIL_BACKEND = 'config.backends.file_email.FileEmailBackend'
+    FILE_EMAIL_OUTPUT = environ.get('FILE_EMAIL_OUTPUT', '/laksh-back/mail-sent.txt')
 DEFAULT_FROM_EMAIL = environ.get('DEFAULT_FROM_EMAIL', 'no-reply@laksh.ru')
 EMAIL_HOST = environ.get('EMAIL_HOST', '')
 EMAIL_PORT = int(environ.get('EMAIL_PORT', '465')) if environ.get('EMAIL_PORT') else (465 if not DEBUG else 25)

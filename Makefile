@@ -1,9 +1,9 @@
 SHELL := /usr/bin/bash
 
-.PHONY: up staging prod down logs ps rebuild
+.PHONY: dev staging prod down logs ps rebuild-prod rebuild-staging rebuild-dev
 
 # Dev по умолчанию
-up:
+dev:
 	FRONT_ENV=dev docker compose up -d --build
 
 staging:
