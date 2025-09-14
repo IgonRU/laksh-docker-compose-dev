@@ -205,3 +205,18 @@ CSRF_TRUSTED_ORIGINS = [
 
 # If frontend uses cookies or credentials
 CORS_ALLOW_CREDENTIALS = True
+
+# Email (SMTP / console backend)
+# По умолчанию в dev используем консольный backend, а в prod читаем SMTP из переменных окружения
+EMAIL_BACKEND = environ.get(
+    'EMAIL_BACKEND',
+    'django.core.mail.backends.console.EmailBackend' if DEBUG else 'django.core.mail.backends.smtp.EmailBackend'
+)
+DEFAULT_FROM_EMAIL = environ.get('DEFAULT_FROM_EMAIL', 'no-reply@laksh.ru')
+EMAIL_HOST = environ.get('EMAIL_HOST', '')
+EMAIL_PORT = int(environ.get('EMAIL_PORT', '465')) if environ.get('EMAIL_PORT') else (465 if not DEBUG else 25)
+EMAIL_HOST_USER = environ.get('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = environ.get('EMAIL_HOST_PASSWORD', '')
+EMAIL_USE_TLS = environ.get('EMAIL_USE_TLS', 'False').lower() in ('1', 'true', 'yes')
+EMAIL_USE_SSL = environ.get('EMAIL_USE_SSL', 'True').lower() in ('1', 'true', 'yes') if not EMAIL_USE_TLS else False
+SERVER_EMAIL = environ.get('SERVER_EMAIL', DEFAULT_FROM_EMAIL)

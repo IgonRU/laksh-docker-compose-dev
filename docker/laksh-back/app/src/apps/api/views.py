@@ -13,6 +13,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.permissions import AllowAny
+from django.core.mail import send_mail, BadHeaderError
+from django.conf import settings
 
 
 @csrf_exempt
@@ -67,5 +69,28 @@ def submit_feedback(request: HttpRequest):
         ip_address=ip,
     )
     feedback.save()
+
+    # Пытаемся отправить уведомление на почту
+    try:
+        subject = "Новая заявка с сайта Laksh"
+        message_lines = [
+            f"Имя: {name}",
+            f"Телефон: {phone or '—'}",
+            f"Страница: {source_page or '—'}",
+            f"IP: {ip}",
+            f"User-Agent: {ua}",
+            "",
+            "Сообщение:",
+            request_text,
+        ]
+        send_mail(
+            subject,
+            "\n".join(message_lines),
+            getattr(settings, 'DEFAULT_FROM_EMAIL', 'no-reply@laksh.ru'),
+            ['mail@laksh.ru'],
+            fail_silently=True,
+        )
+    except BadHeaderError:
+        pass
 
     return Response({"ok": True, "message": "Спасибо! Мы свяжемся с вами."}, status=status.HTTP_201_CREATED)
