@@ -220,3 +220,6 @@ EMAIL_HOST_PASSWORD = environ.get('EMAIL_HOST_PASSWORD', '')
 EMAIL_USE_TLS = environ.get('EMAIL_USE_TLS', 'False').lower() in ('1', 'true', 'yes')
 EMAIL_USE_SSL = environ.get('EMAIL_USE_SSL', 'True').lower() in ('1', 'true', 'yes') if not EMAIL_USE_TLS else False
 SERVER_EMAIL = environ.get('SERVER_EMAIL', DEFAULT_FROM_EMAIL)
+
+# Feedback notifications
+FEEDBACK_NOTIFY_TO = [e.strip() for e in environ.get('FEEDBACK_NOTIFY_TO', 'mail@laksh.ru').split(',') if e.strip()]

@@ -87,7 +87,7 @@ def submit_feedback(request: HttpRequest):
             subject,
             "\n".join(message_lines),
             getattr(settings, 'DEFAULT_FROM_EMAIL', 'no-reply@laksh.ru'),
-            ['mail@laksh.ru'],
+            getattr(settings, 'FEEDBACK_NOTIFY_TO', ['mail@laksh.ru']),
             fail_silently=True,
         )
     except BadHeaderError:
