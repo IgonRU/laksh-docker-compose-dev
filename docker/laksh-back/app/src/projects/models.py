@@ -52,6 +52,9 @@ class Project(ClusterableModel):
     description = RichTextField(verbose_name="Описание", blank=True)
     alias = models.SlugField(max_length=200, unique=True, verbose_name="Алиас")
     
+    # Отображение на главной
+    mainpage = models.BooleanField(default=False, verbose_name="Отображать на главной")
+    
     # Info fields
     project_type = models.CharField(max_length=100, verbose_name="Тип проекта", blank=True)
     region = models.CharField(max_length=100, verbose_name="Регион", blank=True)
@@ -72,6 +75,7 @@ class Project(ClusterableModel):
             FieldPanel('image'),
             FieldPanel('description'),
             FieldPanel('alias'),
+            FieldPanel('mainpage'),
         ], heading="Основная информация"),
         
         MultiFieldPanel([

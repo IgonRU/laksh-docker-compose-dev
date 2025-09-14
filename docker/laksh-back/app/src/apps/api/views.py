@@ -13,6 +13,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.permissions import AllowAny
+from pages.models import MainPageSettings
+from projects.models import Project
+from projects.serializers import ProjectListSerializer
 from django.core.mail import send_mail, BadHeaderError
 from django.conf import settings
 
@@ -94,3 +97,28 @@ def submit_feedback(request: HttpRequest):
         pass
 
     return Response({"ok": True, "message": "Спасибо! Мы свяжемся с вами."}, status=status.HTTP_201_CREATED)
+
+
+@api_view(["GET"]) 
+@permission_classes([AllowAny])
+@authentication_classes([])
+def mainpage(request: HttpRequest):
+    """Отдаёт настройки главной страницы и список проектов для портфолио.
+
+    Требования:
+    - В админке настройки позволяют выбрать проекты (только с mainpage=True),
+      но в API всегда отдаём проекты, у которых mainpage=True.
+    """
+    # Настройки главной страницы: читаем из Wagtail Settings (глобальные)
+    settings_obj = MainPageSettings.objects.first()
+    title = settings_obj.title if settings_obj else ''
+    lead = settings_obj.lead if settings_obj else ''
+
+    qs = Project.objects.filter(mainpage=True).order_by('-created_at')
+    items = ProjectListSerializer(qs, many=True).data
+
+    return Response({
+        'title': title,
+        'lead': lead,
+        'portfolio': items
+    }, status=status.HTTP_200_OK)

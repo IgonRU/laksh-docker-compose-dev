@@ -46,6 +46,7 @@ STATICFILES_DIRS = [
 
 INSTALLED_APPS = [
     'corsheaders',
+    'wagtail.contrib.settings',
     'wagtail.contrib.forms',
     'wagtail.contrib.redirects',
     'wagtail.embeds',
