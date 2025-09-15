@@ -113,6 +113,16 @@ def mainpage(request: HttpRequest):
     settings_obj = MainPageSettings.objects.first()
     title = settings_obj.title if settings_obj else ''
     lead = settings_obj.lead if settings_obj else ''
+    hero_images = []
+    if settings_obj:
+        try:
+            hero_images = [
+                hi.image.file.url
+                for hi in settings_obj.hero_images.all()
+                if getattr(hi, 'image', None) and getattr(hi.image, 'file', None)
+            ]
+        except Exception:
+            hero_images = []
 
     qs = Project.objects.filter(mainpage=True).order_by('-created_at')
     items = ProjectListSerializer(qs, many=True).data
@@ -120,5 +130,6 @@ def mainpage(request: HttpRequest):
     return Response({
         'title': title,
         'lead': lead,
+        'heroImages': hero_images,
         'portfolio': items
     }, status=status.HTTP_200_OK)
