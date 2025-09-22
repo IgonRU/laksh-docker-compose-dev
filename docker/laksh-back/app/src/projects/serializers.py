@@ -71,7 +71,7 @@ class ProjectBlockSerializer(serializers.ModelSerializer):
         elif obj.type == 'gallery':
             data['description'] = obj.description
             # Используем новые изображения галереи
-            gallery_images = obj.gallery_images.all()
+            gallery_images = obj.gallery_images.all().order_by('sort_order', 'id')
             if gallery_images.exists():
                 data['images'] = [img.image.file.url for img in gallery_images]
             else:
@@ -107,14 +107,14 @@ class ProjectSerializer(serializers.Serializer):
         plants_data = []
         features_data = []
         
-        for plant in obj.plants.all():
+        for plant in obj.plants.all().order_by('sort_order', 'id'):
             plants_data.append({
                 'name': plant.plant.name,
                 'image': plant.plant.image.file.url if plant.plant.image else None,
                 'description': plant.plant.description
             })
         
-        for feature in obj.features.all():
+        for feature in obj.features.all().order_by('sort_order', 'id'):
             features_data.append({
                 'name': feature.name,
                 'description': feature.description
@@ -134,7 +134,7 @@ class ProjectSerializer(serializers.Serializer):
     
     def get_blocks(self, obj):
         """Получаем блоки проекта"""
-        return ProjectBlockSerializer(obj.blocks.all(), many=True).data
+        return ProjectBlockSerializer(obj.blocks.all().order_by('sort_order', 'id'), many=True).data
 
 
 class ProjectListSerializer(serializers.ModelSerializer):
