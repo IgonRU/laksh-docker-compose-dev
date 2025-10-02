@@ -6,4 +6,5 @@ urlpatterns = [
     path('addTicket', views.add_ticket),
     path('feedback', views.submit_feedback),
     path('mainpage', views.mainpage),
+    path('about', views.about),
 ]

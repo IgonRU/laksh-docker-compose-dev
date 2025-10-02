@@ -13,7 +13,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.permissions import AllowAny
-from pages.models import MainPageSettings
+from pages.models import MainPageSettings, AboutPageSettings
+from people.models import Person
 from projects.models import Project
 from projects.serializers import ProjectListSerializer
 from django.core.mail import send_mail, BadHeaderError
@@ -132,4 +133,62 @@ def mainpage(request: HttpRequest):
         'lead': lead,
         'heroImages': hero_images,
         'portfolio': items
+    }, status=status.HTTP_200_OK)
+
+
+@api_view(["GET"]) 
+@permission_classes([AllowAny])
+@authentication_classes([])
+def about(request: HttpRequest):
+    """Отдаёт настройки страницы About и блоки, включая персоны из People."""
+    settings_obj = AboutPageSettings.objects.first()
+    if not settings_obj:
+        return Response({
+            'title': '',
+            'titleLead': '',
+            'blocks': []
+        }, status=status.HTTP_200_OK)
+
+    blocks_data = []
+    for block in settings_obj.blocks.all().order_by('sort_order', 'id'):
+        item = {
+            'type': block.type,
+            'data': {
+                'title': block.title,
+                'subtitle': block.subtitle,
+            }
+        }
+
+        if block.type == 'text':
+            # RichTextField: берём html
+            item['data']['text'] = block.text.source if hasattr(block.text, 'source') else str(block.text)
+        elif block.type in ['image', 'fixed']:
+            item['data']['description'] = block.description
+            item['data']['image'] = block.image.file.url if block.image else None
+        elif block.type == 'gallery':
+            item['data']['description'] = block.description
+            gallery_images = block.gallery_images.all().order_by('sort_order', 'id')
+            item['data']['images'] = [gi.image.file.url for gi in gallery_images if gi.image]
+        elif block.type == 'persons':
+            # Собираем активных персон из связей блока (они уже ограничены active=True в модели)
+            persons = []
+            for rel in block.persons.all().order_by('sort_order', 'id'):
+                p = rel.person
+                persons.append({
+                    'alias': p.alias,
+                    'name': p.name,
+                    'title': p.title,
+                    'role': p.role,
+                    'biography': p.biography,
+                    'portrait': p.portrait.file.url if p.portrait else None,
+                    'active': p.active,
+                })
+            item['data']['persons'] = persons
+
+        blocks_data.append(item)
+
+    return Response({
+        'title': settings_obj.title,
+        'titleLead': settings_obj.title_lead,
+        'blocks': blocks_data,
     }, status=status.HTTP_200_OK)
