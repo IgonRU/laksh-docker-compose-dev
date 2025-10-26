@@ -28,14 +28,14 @@ echo "Архив: $ARCHIVE_NAME"
 
 mkdir -p "$BACKUP_DIR_PATH"
 
-restore_containers() {
-  echo "[$(date +'%Y-%m-%d %H:%M:%S')] Запускаем контейнеры обратно..."
-  ( cd "$PROJECT_DIR" && docker compose up -d ) || true
-}
-trap restore_containers EXIT
+# restore_containers() {
+#   echo "[$(date +'%Y-%m-%d %H:%M:%S')] Запускаем контейнеры обратно..."
+#   ( cd "$PROJECT_DIR" && docker compose up -d ) || true
+# }
+# trap restore_containers EXIT
 
-echo "[$(date +'%Y-%m-%d %H:%M:%S')] Останавливаем контейнеры..."
-( cd "$PROJECT_DIR" && docker compose down )
+# echo "[$(date +'%Y-%m-%d %H:%M:%S')] Останавливаем контейнеры..."
+# ( cd "$PROJECT_DIR" && docker compose down )
 
 echo "[$(date +'%Y-%m-%d %H:%M:%S')] Создаём архив..."
 tar --ignore-failed-read -czf "$BACKUP_DIR_PATH/$ARCHIVE_NAME" \
