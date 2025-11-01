@@ -91,6 +91,7 @@ class ProjectSerializer(serializers.Serializer):
     description = serializers.CharField(required=False, allow_blank=True)
     alias = serializers.CharField()
     mainPage = serializers.BooleanField(source='mainpage')
+    published = serializers.BooleanField()
     info = serializers.SerializerMethodField()
     blocks = serializers.SerializerMethodField()
     

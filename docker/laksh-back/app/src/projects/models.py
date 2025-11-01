@@ -55,6 +55,9 @@ class Project(ClusterableModel):
     # Отображение на главной
     mainpage = models.BooleanField(default=False, verbose_name="Отображать на главной")
     
+    # Статус публикации
+    published = models.BooleanField(default=False, verbose_name="Опубликован")
+    
     # Info fields
     project_type = models.CharField(max_length=100, verbose_name="Тип проекта", blank=True)
     region = models.CharField(max_length=100, verbose_name="Регион", blank=True)
@@ -76,6 +79,7 @@ class Project(ClusterableModel):
             FieldPanel('description'),
             FieldPanel('alias'),
             FieldPanel('mainpage'),
+            FieldPanel('published'),
         ], heading="Основная информация"),
         
         MultiFieldPanel([
