@@ -22,19 +22,19 @@ from wagtail.documents import urls as wagtaildocs_urls
 from django.conf import settings
 from django.conf.urls.static import static
 from projects.views import ProjectDetailAPIView
+from services.views import ServiceGroupListAPIView
 
 urlpatterns = [
     path('django-mahant/', admin.site.urls),
     path('mahant/', include(wagtailadmin_urls)),
     path('documents/', include(wagtaildocs_urls)),
+    # Услуги и проекты без завершающего слэша должны обрабатываться до общего API-поддерева
+    path('api/services', ServiceGroupListAPIView.as_view(), name='service-group-root'),
+    re_path(r'^api/services/', include('services.urls')),
+    path('api/projects', include('projects.urls')),
+    path('api/projects/<slug:alias>', ProjectDetailAPIView.as_view(), name='project-detail-root'),
     # API корень: подключаем поддерево /api/... (без требуемого завершающего слэша у конечных URL)
     re_path(r'^api/', include('apps.api.urls')),
-    # Проекты: только без завершающего слэша
-    path('api/projects', include('projects.urls')),
-    # Явный маршрут для детальной карточки проекта без необходимости завершающего слэша
-    path('api/projects/<slug:alias>', ProjectDetailAPIView.as_view(), name='project-detail-root'),
-    # Услуги: только без завершающего слэша
-    path('api/services', include('services.urls')),
     # Дубли с завершающим слэшем
     # path('api/', include('apps.api.urls')),
     # path('api/projects/', include('projects.urls')),

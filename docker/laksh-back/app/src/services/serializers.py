@@ -85,9 +85,8 @@ class ServiceGroupSerializer(serializers.ModelSerializer):
         return None
     
     def get_services(self, obj):
-        """Получаем услуги через промежуточную таблицу, сортированные"""
-        items = obj.service_items.filter(service__active=True).order_by('sort_order')
-        services = [item.service for item in items]
+        """Получаем активные услуги группы с учетом сортировки"""
+        services = obj.services.filter(active=True).order_by('sort_order', 'id')
         return ServiceListItemSerializer(services, many=True).data
 
 

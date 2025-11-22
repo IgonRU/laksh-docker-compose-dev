@@ -4,7 +4,7 @@ Views для API услуг.
 
 from rest_framework import generics
 from django.db.models import Prefetch
-from .models import ServiceGroup, Service, ServiceGroupItem
+from .models import ServiceGroup, Service
 from .serializers import ServiceGroupSerializer, ServiceDetailSerializer
 
 
@@ -16,13 +16,13 @@ class ServiceGroupListAPIView(generics.ListAPIView):
         """Получаем только группы, у которых есть активные услуги"""
         return ServiceGroup.objects.prefetch_related(
             Prefetch(
-                'service_items',
-                queryset=ServiceGroupItem.objects.filter(
-                    service__active=True
-                ).select_related('service').order_by('sort_order')
+                'services',
+                queryset=Service.objects.filter(
+                    active=True
+                ).order_by('sort_order', 'id')
             )
         ).filter(
-            service_items__service__active=True
+            services__active=True
         ).distinct().order_by('sort_order')
 
 

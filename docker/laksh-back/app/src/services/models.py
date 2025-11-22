@@ -5,7 +5,6 @@
 """
 
 from django.db import models
-from wagtail.models import Orderable
 from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
 from wagtail.snippets.models import register_snippet
 from wagtail.fields import RichTextField
@@ -37,7 +36,6 @@ class ServiceGroup(ClusterableModel):
         FieldPanel('description'),
         FieldPanel('image'),
         FieldPanel('sort_order'),
-        InlinePanel('service_items', label="Услуги в группе"),
     ]
 
     def __str__(self):
@@ -57,6 +55,15 @@ class Service(ClusterableModel):
     title_lead = models.CharField(max_length=300, verbose_name="Подзаголовок", blank=True)
     slogan = models.CharField(max_length=300, verbose_name="Слоган", blank=True)
     alias = models.SlugField(max_length=200, unique=True, verbose_name="Алиас")
+    group = models.ForeignKey(
+        'ServiceGroup',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='services',
+        verbose_name="Группа"
+    )
+    sort_order = models.IntegerField(default=0, verbose_name="Порядок в группе")
     
     # Изображение
     image = models.ForeignKey(
@@ -95,6 +102,8 @@ class Service(ClusterableModel):
             FieldPanel('slogan'),
             FieldPanel('alias'),
             FieldPanel('image'),
+            FieldPanel('group'),
+            FieldPanel('sort_order'),
         ], heading="Основная информация"),
         
         MultiFieldPanel([
@@ -119,34 +128,6 @@ class Service(ClusterableModel):
         verbose_name = "Услуга"
         verbose_name_plural = "Услуги"
         ordering = ['-created_at']
-
-
-class ServiceGroupItem(Orderable):
-    """Промежуточная модель для связи ServiceGroup и Service с сортировкой"""
-    group = ParentalKey(
-        ServiceGroup,
-        on_delete=models.CASCADE,
-        related_name='service_items',
-        verbose_name="Группа"
-    )
-    service = models.ForeignKey(
-        Service,
-        on_delete=models.CASCADE,
-        limit_choices_to={'active': True},
-        verbose_name="Услуга"
-    )
-
-    panels = [
-        FieldPanel('service'),
-    ]
-
-    def __str__(self):
-        return f"{self.group.title} → {self.service.title}"
-
-    class Meta:
-        verbose_name = "Услуга в группе"
-        verbose_name_plural = "Услуги в группе"
-        unique_together = ['group', 'service']
 
 
 class ServiceGalleryImage(BaseGalleryImage):
