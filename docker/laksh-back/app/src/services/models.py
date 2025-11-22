@@ -18,6 +18,7 @@ from content_blocks.models import BaseContentBlock, BaseGalleryImage
 class ServiceGroup(ClusterableModel):
     """Группа услуг (например, "Проектирование", "Реализация")"""
     title = models.CharField(max_length=200, verbose_name="Название группы")
+    alias = models.SlugField(max_length=200, unique=True, verbose_name="Алиас", db_index=False)
     description = models.TextField(verbose_name="Описание группы")
     image = models.ForeignKey(
         Image,
@@ -33,6 +34,7 @@ class ServiceGroup(ClusterableModel):
 
     panels = [
         FieldPanel('title'),
+        FieldPanel('alias'),
         FieldPanel('description'),
         FieldPanel('image'),
         FieldPanel('sort_order'),

@@ -55,6 +55,7 @@ class ServiceBlockSerializer(serializers.ModelSerializer):
 
 class ServiceListItemSerializer(serializers.ModelSerializer):
     """Сериализатор для карточки услуги в списке"""
+    alias = serializers.CharField()
     linkUrl = serializers.CharField(source='alias')
     linkLabel = serializers.CharField(source='link_label')
     descriptionShort = serializers.CharField(source='description_short')
@@ -62,7 +63,7 @@ class ServiceListItemSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Service
-        fields = ['title', 'descriptionShort', 'image', 'linkLabel', 'linkUrl']
+        fields = ['alias', 'title', 'descriptionShort', 'image', 'linkLabel', 'linkUrl']
     
     def get_image(self, obj):
         if obj.image:
@@ -77,7 +78,7 @@ class ServiceGroupSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = ServiceGroup
-        fields = ['title', 'description', 'image', 'services']
+        fields = ['title', 'alias', 'description', 'image', 'services']
     
     def get_image(self, obj):
         if obj.image:
