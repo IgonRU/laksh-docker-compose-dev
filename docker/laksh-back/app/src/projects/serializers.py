@@ -107,14 +107,15 @@ class ProjectSerializer(serializers.Serializer):
         plants_data = []
         features_data = []
         
-        for plant in obj.plants.all().order_by('sort_order', 'id'):
+        # Используем prefetch'енные данные напрямую без повторного order_by
+        for plant in obj.plants.all():
             plants_data.append({
                 'name': plant.plant.name,
                 'image': plant.plant.image.file.url if plant.plant.image else None,
                 'description': plant.plant.description
             })
         
-        for feature in obj.features.all().order_by('sort_order', 'id'):
+        for feature in obj.features.all():
             features_data.append({
                 'name': feature.name,
                 'description': feature.description
