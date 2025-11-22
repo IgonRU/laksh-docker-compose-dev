@@ -33,6 +33,8 @@ urlpatterns = [
     path('api/projects', include('projects.urls')),
     # Явный маршрут для детальной карточки проекта без необходимости завершающего слэша
     path('api/projects/<slug:alias>', ProjectDetailAPIView.as_view(), name='project-detail-root'),
+    # Услуги: только без завершающего слэша
+    path('api/services', include('services.urls')),
     # Дубли с завершающим слэшем
     # path('api/', include('apps.api.urls')),
     # path('api/projects/', include('projects.urls')),

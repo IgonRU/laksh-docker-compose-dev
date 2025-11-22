@@ -8,7 +8,7 @@ from .serializers import ProjectSerializer, ProjectListSerializer
 
 class ProjectListAPIView(generics.ListAPIView):
     """API для получения списка проектов"""
-    queryset = Project.objects.all()
+    queryset = Project.objects.filter(published=True)
     serializer_class = ProjectListSerializer
 
 

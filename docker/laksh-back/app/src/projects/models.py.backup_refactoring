@@ -23,12 +23,6 @@ class Plant(models.Model):
     description = models.TextField(verbose_name="Описание")
 
     panels = [
-        FieldPanel("type"),
-        FieldPanel("title"),
-        FieldPanel("subtitle"),
-        FieldPanel("description"),
-        FieldPanel("image"),
-        FieldPanel("text"),
         FieldPanel('name'),
         FieldPanel('image'),
         FieldPanel('description'),
@@ -55,35 +49,33 @@ class Project(ClusterableModel):
         blank=True,
         verbose_name="Главное изображение"
     )
-    description = RichTextField(verbose_name="Описание")
-    url = models.SlugField(max_length=200, unique=True, verbose_name="URL")
+    description = RichTextField(verbose_name="Описание", blank=True)
+    alias = models.SlugField(max_length=200, unique=True, verbose_name="Алиас")
+    
+    # Отображение на главной
+    mainpage = models.BooleanField(default=False, verbose_name="Отображать на главной")
     
     # Info fields
-    project_type = models.CharField(max_length=100, verbose_name="Тип проекта")
-    region = models.CharField(max_length=100, verbose_name="Регион")
-    style = models.CharField(max_length=200, verbose_name="Стиль")
-    area = models.IntegerField(verbose_name="Площадь (м²)")
-    start_year = models.IntegerField(verbose_name="Год начала")
-    end_year = models.IntegerField(verbose_name="Год окончания")
-    plants_total = models.IntegerField(verbose_name="Всего растений")
+    project_type = models.CharField(max_length=100, verbose_name="Тип проекта", blank=True)
+    region = models.CharField(max_length=100, verbose_name="Регион", blank=True)
+    style = models.CharField(max_length=200, verbose_name="Стиль", blank=True)
+    area = models.IntegerField(verbose_name="Площадь (м²)", null=True, blank=True)
+    start_year = models.IntegerField(verbose_name="Год начала", null=True, blank=True)
+    end_year = models.IntegerField(verbose_name="Год окончания", null=True, blank=True)
+    plants_total = models.IntegerField(verbose_name="Всего растений", null=True, blank=True)
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     panels = [
-        FieldPanel("type"),
-        FieldPanel("title"),
-        FieldPanel("subtitle"),
-        FieldPanel("description"),
-        FieldPanel("image"),
-        FieldPanel("text"),
         MultiFieldPanel([
             FieldPanel('title'),
             FieldPanel('title_lead'),
             FieldPanel('slogan'),
             FieldPanel('image'),
             FieldPanel('description'),
-            FieldPanel('url'),
+            FieldPanel('alias'),
+            FieldPanel('mainpage'),
         ], heading="Основная информация"),
         
         MultiFieldPanel([
@@ -116,12 +108,6 @@ class ProjectPlant(Orderable):
     plant = models.ForeignKey(Plant, on_delete=models.CASCADE, verbose_name="Растение")
 
     panels = [
-        FieldPanel("type"),
-        FieldPanel("title"),
-        FieldPanel("subtitle"),
-        FieldPanel("description"),
-        FieldPanel("image"),
-        FieldPanel("text"),
         FieldPanel('plant'),
     ]
 
@@ -137,12 +123,6 @@ class ProjectFeature(Orderable):
     description = models.CharField(max_length=200, verbose_name="Значение")
 
     panels = [
-        FieldPanel("type"),
-        FieldPanel("title"),
-        FieldPanel("subtitle"),
-        FieldPanel("description"),
-        FieldPanel("image"),
-        FieldPanel("text"),
         FieldPanel('name'),
         FieldPanel('description'),
     ]
@@ -163,12 +143,6 @@ class GalleryImage(Orderable):
     caption = models.CharField(max_length=200, blank=True, verbose_name="Подпись")
 
     panels = [
-        FieldPanel("type"),
-        FieldPanel("title"),
-        FieldPanel("subtitle"),
-        FieldPanel("description"),
-        FieldPanel("image"),
-        FieldPanel("text"),
         FieldPanel('image'),
         FieldPanel('caption'),
     ]
@@ -188,10 +162,10 @@ class ProjectBlock(Orderable, ClusterableModel):
     ]
     
     project = ParentalKey(Project, on_delete=models.CASCADE, related_name='blocks')
-    type = models.CharField(max_length=20, choices=BLOCK_TYPES, verbose_name="Тип блока")
+    type = models.CharField(max_length=20, choices=BLOCK_TYPES, verbose_name="Тип блока", blank=True, null=True)
     
     # Поля для всех типов блоков
-    title = models.CharField(max_length=200, verbose_name="Заголовок")
+    title = models.CharField(max_length=200, verbose_name="Заголовок", blank=True)
     subtitle = models.CharField(max_length=300, blank=True, verbose_name="Подзаголовок")
     description = models.TextField(blank=True, verbose_name="Описание")
     
@@ -208,12 +182,6 @@ class ProjectBlock(Orderable, ClusterableModel):
     text = models.TextField(blank=True, verbose_name="Текст")
 
     panels = [
-        FieldPanel("type"),
-        FieldPanel("title"),
-        FieldPanel("subtitle"),
-        FieldPanel("description"),
-        FieldPanel("image"),
-        FieldPanel("text"),
         FieldPanel('type'),
         FieldPanel('title'),
         FieldPanel('subtitle'),

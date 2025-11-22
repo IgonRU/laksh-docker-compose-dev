@@ -67,9 +67,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'content_blocks',
     'pages',
     'projects',
     'people',
+    'services',
     'apps.api.apps.ApiConfig',
 ]
 

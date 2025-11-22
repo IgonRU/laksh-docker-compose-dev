@@ -6,7 +6,7 @@ from wagtail.fields import RichTextField
 from wagtail.images.models import Image
 from modelcluster.models import ClusterableModel
 from modelcluster.fields import ParentalKey
-import json
+from content_blocks.models import BaseContentBlock, BaseGalleryImage
 
 
 @register_snippet
@@ -55,6 +55,9 @@ class Project(ClusterableModel):
     # Отображение на главной
     mainpage = models.BooleanField(default=False, verbose_name="Отображать на главной")
     
+    # Статус публикации
+    published = models.BooleanField(default=False, verbose_name="Опубликован")
+    
     # Info fields
     project_type = models.CharField(max_length=100, verbose_name="Тип проекта", blank=True)
     region = models.CharField(max_length=100, verbose_name="Регион", blank=True)
@@ -76,6 +79,7 @@ class Project(ClusterableModel):
             FieldPanel('description'),
             FieldPanel('alias'),
             FieldPanel('mainpage'),
+            FieldPanel('published'),
         ], heading="Основная информация"),
         
         MultiFieldPanel([
@@ -132,75 +136,18 @@ class ProjectFeature(Orderable):
         verbose_name_plural = "Характеристики"
 
 
-class GalleryImage(Orderable):
-    """Изображение для галереи"""
+class ProjectGalleryImage(BaseGalleryImage):
+    """Изображение для галереи проекта"""
     block = ParentalKey('ProjectBlock', on_delete=models.CASCADE, related_name='gallery_images')
-    image = models.ForeignKey(
-        Image,
-        on_delete=models.CASCADE,
-        verbose_name="Изображение"
-    )
-    caption = models.CharField(max_length=200, blank=True, verbose_name="Подпись")
-
-    panels = [
-        FieldPanel('image'),
-        FieldPanel('caption'),
-    ]
 
     class Meta:
         verbose_name = "Изображение галереи"
         verbose_name_plural = "Изображения галереи"
 
 
-class ProjectBlock(Orderable, ClusterableModel):
+class ProjectBlock(BaseContentBlock):
     """Блоки контента проекта"""
-    BLOCK_TYPES = [
-        ('text', 'Текстовый блок'),
-        ('image', 'Изображение'),
-        ('fixed', 'Фиксированный блок'),
-        ('gallery', 'Галерея'),
-    ]
-    
     project = ParentalKey(Project, on_delete=models.CASCADE, related_name='blocks')
-    type = models.CharField(max_length=20, choices=BLOCK_TYPES, verbose_name="Тип блока", blank=True, null=True)
-    
-    # Поля для всех типов блоков
-    title = models.CharField(max_length=200, verbose_name="Заголовок", blank=True)
-    subtitle = models.CharField(max_length=300, blank=True, verbose_name="Подзаголовок")
-    description = models.TextField(blank=True, verbose_name="Описание")
-    
-    # Поля для блоков с изображениями
-    image = models.ForeignKey(
-        Image,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        verbose_name="Изображение"
-    )
-    
-    # Поля для текстовых блоков
-    text = models.TextField(blank=True, verbose_name="Текст")
-
-    panels = [
-        FieldPanel('type'),
-        FieldPanel('title'),
-        FieldPanel('subtitle'),
-        FieldPanel('description'),
-        FieldPanel('image'),
-        FieldPanel('text'),
-        InlinePanel('gallery_images', label="Изображения галереи"),
-    ]
-
-    @property
-    def images(self):
-        """Возвращает список изображений для галереи"""
-        gallery_images = self.gallery_images.all()
-        if gallery_images.exists():
-            return [img.image.file.url for img in gallery_images]
-        return []
-
-    def __str__(self):
-        return f"{self.get_type_display()}: {self.title}"
 
     class Meta:
         verbose_name = "Блок контента"

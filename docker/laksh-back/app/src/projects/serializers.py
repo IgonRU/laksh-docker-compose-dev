@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Project, Plant, ProjectPlant, ProjectFeature, ProjectBlock, GalleryImage
+from .models import Project, Plant, ProjectPlant, ProjectFeature, ProjectBlock, ProjectGalleryImage
 
 
 class PlantSerializer(serializers.ModelSerializer):
@@ -36,11 +36,11 @@ class ProjectFeatureSerializer(serializers.ModelSerializer):
         fields = ['name', 'description']
 
 
-class GalleryImageSerializer(serializers.ModelSerializer):
+class ProjectGalleryImageSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
     
     class Meta:
-        model = GalleryImage
+        model = ProjectGalleryImage
         fields = ['image', 'caption']
     
     def get_image(self, obj):
@@ -91,6 +91,7 @@ class ProjectSerializer(serializers.Serializer):
     description = serializers.CharField(required=False, allow_blank=True)
     alias = serializers.CharField()
     mainPage = serializers.BooleanField(source='mainpage')
+    published = serializers.BooleanField()
     info = serializers.SerializerMethodField()
     blocks = serializers.SerializerMethodField()
     
