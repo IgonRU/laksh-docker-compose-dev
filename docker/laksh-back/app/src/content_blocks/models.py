@@ -7,6 +7,7 @@ from django.db import models
 from wagtail.models import Orderable
 from wagtail.admin.panels import FieldPanel, InlinePanel
 from wagtail.images.models import Image
+from wagtail.fields import RichTextField
 from modelcluster.models import ClusterableModel
 
 
@@ -33,7 +34,11 @@ class BaseContentBlock(Orderable, ClusterableModel):
     # Поля для всех типов блоков
     title = models.CharField(max_length=200, verbose_name="Заголовок", blank=True)
     subtitle = models.CharField(max_length=300, blank=True, verbose_name="Подзаголовок")
-    description = models.TextField(blank=True, verbose_name="Описание")
+    description = RichTextField(
+        blank=True,
+        verbose_name="Описание",
+        features=['h2', 'h3', 'bold', 'italic', 'link', 'ol', 'ul', 'hr']
+    )
     
     # Поля для блоков с изображениями
     image = models.ForeignKey(
