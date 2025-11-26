@@ -1,6 +1,7 @@
 from django.db import models
 from wagtail.snippets.models import register_snippet
 from wagtail.admin.panels import FieldPanel
+from wagtail.fields import RichTextField
 
 
 @register_snippet
@@ -9,7 +10,11 @@ class Person(models.Model):
     name = models.CharField(max_length=255, verbose_name='Имя')
     title = models.CharField(max_length=255, blank=True, verbose_name='Заголовок')
     role = models.CharField(max_length=255, blank=True, verbose_name='Роль')
-    biography = models.TextField(blank=True, verbose_name='Биография')
+    biography = RichTextField(
+        blank=True,
+        verbose_name='Биография',
+        features=['h2', 'h3', 'bold', 'italic', 'link', 'ol', 'ul', 'hr']
+    )
     portrait = models.ForeignKey(
         'wagtailimages.Image',
         null=True,
