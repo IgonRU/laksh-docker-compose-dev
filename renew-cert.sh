@@ -1,11 +1,17 @@
 #!/bin/bash
 
-# Динамическое определение пути к проекту
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
-cd "$PROJECT_DIR" || exit 1
+# Директория с docker-compose.yml (папка laksh-dc)
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+COMPOSE_FILE="$ROOT_DIR/docker-compose.yml"
 
-docker compose run --rm certbot renew --webroot -w /var/www/certbot
+if [ ! -f "$COMPOSE_FILE" ]; then
+  echo "docker-compose.yml not found at $COMPOSE_FILE"
+  exit 1
+fi
+
+cd "$ROOT_DIR" || exit 1
+
+docker compose -f "$COMPOSE_FILE" run --rm certbot renew --webroot -w /var/www/certbot
 
 if [ $? -eq 0 ]; then
   echo "Certbot renew succeeded, reloading nginx..."
